@@ -1,20 +1,32 @@
 [
     {
         "id": 1,
-        "title": "Наруто",
+        "title": "Наруто 1",
         "poster": "https://upload.wikimedia.org/wikipedia/en/9/94/NarutoCoverTankobon1.jpg",
-        "stream_id": 25
+        "description": "Минуло два роки. Наруто повертається до Конохи, щоб продовжити свій шлях ніндзя та повернути друга.",
+        "episodes": [
+            { "name": "1 серія", "url": "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" },
+            { "name": "2 серія", "url": "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" },
+            { "name": "3 серія", "url": "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" }
+        ]
     },
     {
         "id": 2,
-        "title": "Доктор Стоун",
+        "title": "Доктор Стоун 1",
         "poster": "https://kinogo.online/uploads/posts/2021-03/1614924674-652224805.jpg",
-        "stream_id": 27
+        "description": "В один момент все людство перетворилося на камінь. Тисячі років по тому геній Сенку прокидається.",
+        "episodes": [
+            { "name": "Епізод 1", "url": "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" }
+        ]
     },
     {
         "id": 3,
-        "title": "Ванпачмен",
-        "stream_url": "https://unindustriously-subglacial-adina.ngrok-free.dev/stream/28?hash=df2593",
-        "poster": "https://nekoteka.com/sites/default/files/styles/420x580/public/anime_poster/one-punch-man-3.jpg?itok=vQzQA9z3"
+        "title": "Ванпачмен 3",
+        "poster": "https://nekoteka.com/sites/default/files/styles/420x580/public/anime_poster/one-punch-man-3.jpg?itok=vQzQA9z3",
+        "description": "Історія про героя, який став занадто сильним і перемагає всіх ворогів одним ударом.",
+        "episodes": [
+            { "name": "Серія 1", "url": "https://unindustriously-subglacial-adina.ngrok-free.dev/stream/28?hash=df2593" },
+            { "name": "Серія 2", "url": "https://unindustriously-subglacial-adina.ngrok-free.dev/stream/28?hash=df2593" }
+        ]
     }
 ]

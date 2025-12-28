@@ -7,26 +7,26 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         :root {
-            /* Використовуємо змінні Telegram для адаптації під тему користувача */
             --bg-color: var(--tg-theme-bg-color, #1c1c1e);
             --text-color: var(--tg-theme-text-color, #ffffff);
             --card-bg: var(--tg-theme-secondary-bg-color, #2c2c2e);
             --hint-color: var(--tg-theme-hint-color, #aaaaaa);
             --accent-color: var(--tg-theme-button-color, #2481cc);
+            --button-text: var(--tg-theme-button-text-color, #ffffff);
         }
 
         body {
             background-color: var(--bg-color);
             color: var(--text-color);
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            margin: 0;
-            padding: 0; /* Прибираємо відступи body, щоб пошук був на всю ширину */
+            margin: 0; padding: 0;
         }
 
-        /* --- ПОШУК --- */
+        /* --- ГОЛОВНИЙ ЕКРАН (HOME) --- */
+        #home-view { display: block; }
+        
         .search-container {
-            position: sticky;
-            top: 0;
+            position: sticky; top: 0;
             background-color: var(--bg-color);
             padding: 10px 15px;
             z-index: 100;
@@ -34,144 +34,150 @@
         }
 
         #search-input {
-            width: 100%;
-            padding: 12px;
-            border-radius: 12px;
-            border: none;
+            width: 100%; padding: 12px;
+            border-radius: 12px; border: none;
             background-color: var(--card-bg);
             color: var(--text-color);
-            font-size: 16px;
-            outline: none;
-            box-sizing: border-box; /* Щоб padding не ламав ширину */
-            transition: all 0.3s ease;
+            font-size: 16px; outline: none;
+            box-sizing: border-box;
         }
 
-        #search-input:focus {
-            box-shadow: 0 0 0 2px var(--accent-color);
-        }
-
-        /* --- СІТКА (GRID) --- */
         .grid-container {
             display: grid;
-            grid-template-columns: repeat(2, 1fr); /* 2 колонки однакової ширини */
-            gap: 15px;
-            padding: 15px;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px; padding: 15px;
         }
 
         .anime-card {
             background-color: var(--card-bg);
-            border-radius: 12px;
-            overflow: hidden;
+            border-radius: 12px; overflow: hidden;
             box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-            display: flex;
-            flex-direction: column;
             transition: transform 0.2s;
+            cursor: pointer;
         }
 
-        .anime-card:active {
-            transform: scale(0.98); /* Ефект натискання */
-        }
+        .anime-card:active { transform: scale(0.98); }
 
         .poster-wrapper {
-            width: 100%;
-            padding-top: 140%; /* Співвідношення сторін постеру (високий прямокутник) */
-            position: relative;
-            background-color: #000;
+            width: 100%; padding-top: 140%;
+            position: relative; background-color: #000;
         }
 
         .poster-image {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover; /* Картинка заповнює блок, не розтягуючись */
+            position: absolute; top: 0; left: 0;
+            width: 100%; height: 100%; object-fit: cover;
         }
 
-        .play-icon {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 40px;
-            height: 40px;
-            background: rgba(0,0,0,0.6);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            color: white;
-            opacity: 0.8;
-        }
-
-        .info {
-            padding: 10px;
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
+        .info { padding: 10px; }
         .title {
-            font-size: 14px;
-            font-weight: 600;
-            line-height: 1.3;
-            margin-bottom: 5px;
-            /* Обрізка тексту, якщо занадто довгий (3 рядки) */
-            display: -webkit-box;
-            -webkit-line-clamp: 3;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
+            font-size: 14px; font-weight: 600;
+            display: -webkit-box; -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical; overflow: hidden;
         }
 
-        /* --- МОДАЛЬНЕ ВІКНО ПЛЕЄРА --- */
-        /* Ми відкриватимемо відео на весь екран при кліку */
+        /* --- ЕКРАН ДЕТАЛЕЙ (DETAILS) --- */
+        #details-view { display: none; padding-bottom: 40px; }
+
+        .details-header {
+            position: relative;
+            width: 100%;
+            height: 300px;
+        }
+
+        .backdrop-image {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+            -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+        }
+
+        .details-content {
+            padding: 0 20px;
+            margin-top: -60px; /* Наїзд на картинку */
+            position: relative;
+        }
+
+        .details-title {
+            font-size: 24px; font-weight: bold;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+        }
+
+        .details-desc {
+            font-size: 14px; color: var(--hint-color);
+            margin-bottom: 20px; line-height: 1.5;
+        }
+
+        .section-title {
+            font-size: 18px; font-weight: 600;
+            margin-bottom: 15px; border-left: 4px solid var(--accent-color);
+            padding-left: 10px;
+        }
+
+        /* Сітка епізодів */
+        .episodes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 10px;
+        }
+
+        .episode-btn {
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 12px 5px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        .episode-btn:active { background-color: var(--accent-color); color: white; }
+
+        /* --- ПЛЕЄР --- */
         .player-modal {
-            display: none;
-            position: fixed;
+            display: none; position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: black;
-            z-index: 200;
-            flex-direction: column;
-            justify-content: center;
+            background: black; z-index: 200;
+            flex-direction: column; justify-content: center;
         }
         
-        .close-btn {
-            position: absolute;
-            top: 20px; right: 20px;
-            color: white;
-            background: rgba(255,255,255,0.2);
-            border: none;
-            border-radius: 50%;
-            width: 40px; height: 40px;
-            font-size: 24px;
-            cursor: pointer;
-            z-index: 201;
+        .close-player-btn {
+            position: absolute; top: 20px; right: 20px;
+            color: white; background: rgba(255,255,255,0.2);
+            border: none; border-radius: 50%;
+            width: 40px; height: 40px; font-size: 24px;
+            cursor: pointer; z-index: 201;
         }
 
         video { width: 100%; max-height: 100vh; }
-        
-        .no-results {
-            text-align: center;
-            grid-column: 1 / -1; /* Розтягнути на всю ширину */
-            color: var(--hint-color);
-            margin-top: 20px;
-        }
     </style>
 </head>
 <body>
 
-    <div class="search-container">
-        <input type="text" id="search-input" placeholder="Пошук аніме...">
+    <div id="home-view">
+        <div class="search-container">
+            <input type="text" id="search-input" placeholder="Пошук аніме...">
+        </div>
+        <div id="anime-grid" class="grid-container"></div>
     </div>
 
-    <div id="anime-grid" class="grid-container">
-        <div style="text-align:center; grid-column: 1/-1; color: gray;">Завантаження...</div>
+    <div id="details-view">
+        <div class="details-header">
+            <img id="detail-poster" src="" class="backdrop-image">
+        </div>
+        <div class="details-content">
+            <div id="detail-title" class="details-title">Title</div>
+            <div id="detail-desc" class="details-desc">Description...</div>
+
+            <div class="section-title">Епізоди</div>
+            <div id="episodes-list" class="episodes-grid">
+                </div>
+        </div>
     </div>
 
     <div id="player-modal" class="player-modal">
-        <button class="close-btn" onclick="closePlayer()">×</button>
+        <button class="close-player-btn" onclick="closePlayer()">×</button>
         <video id="main-player" controls playsinline>
             <source src="" type="video/mp4">
         </video>
@@ -180,68 +186,92 @@
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand(); 
+        // Налаштування кнопки назад
+        tg.BackButton.onClick(() => {
+            showHome();
+        });
 
-        let allAnimeData = []; // Тут зберігатимемо всі завантажені аніме
+        let allAnimeData = []; 
 
-        // 1. Завантаження даних
         async function loadAnime() {
             try {
                 const response = await fetch('anime_data.json?t=' + new Date().getTime());
-                if (!response.ok) throw new Error("Помилка бази");
-                
                 const data = await response.json();
-                allAnimeData = data.reverse(); // Найновіші зверху
-                renderGrid(allAnimeData); // Малюємо все
+                allAnimeData = data.reverse();
+                renderGrid(allAnimeData);
             } catch (error) {
-                document.getElementById('anime-grid').innerHTML = `<div style="text-align:center; grid-column: 1/-1;">Помилка: ${error.message}</div>`;
+                console.error("Помилка:", error);
             }
         }
 
-        // 2. Функція малювання сітки
         function renderGrid(items) {
             const container = document.getElementById('anime-grid');
             container.innerHTML = '';
 
-            if (items.length === 0) {
-                container.innerHTML = '<div class="no-results">Нічого не знайдено 😢</div>';
-                return;
-            }
-
             items.forEach(item => {
                 const card = document.createElement('div');
                 card.className = 'anime-card';
-                // Якщо постера немає, ставимо заглушку
-                const posterUrl = item.poster || "https://via.placeholder.com/300x450?text=Anime";
-
                 card.innerHTML = `
                     <div class="poster-wrapper">
-                        <img src="${posterUrl}" class="poster-image" loading="lazy" alt="${item.title}">
-                        <div class="play-icon">▶</div>
+                        <img src="${item.poster}" class="poster-image" loading="lazy">
                     </div>
                     <div class="info">
                         <div class="title">${item.title}</div>
                     </div>
                 `;
-                
-                // Додаємо клік для відкриття відео
-                card.onclick = () => openPlayer(item.stream_url);
+                // ТЕПЕР ВІДКРИВАЄМО ДЕТАЛІ, А НЕ ПЛЕЄР
+                card.onclick = () => showDetails(item);
                 container.appendChild(card);
             });
         }
 
-        // 3. Логіка Пошуку
-        const searchInput = document.getElementById('search-input');
-        searchInput.addEventListener('input', (e) => {
-            const searchTerm = e.target.value.toLowerCase();
-            
-            const filtered = allAnimeData.filter(item => 
-                item.title.toLowerCase().includes(searchTerm)
-            );
-            
+        // --- ЛОГІКА НАВІГАЦІЇ ---
+
+        function showDetails(anime) {
+            // 1. Приховати Home, Показати Details
+            document.getElementById('home-view').style.display = 'none';
+            document.getElementById('details-view').style.display = 'block';
+
+            // 2. Заповнити інфо
+            document.getElementById('detail-poster').src = anime.poster;
+            document.getElementById('detail-title').innerText = anime.title;
+            document.getElementById('detail-desc').innerText = anime.description || "Опис відсутній";
+
+            // 3. Генерувати кнопки епізодів
+            const epList = document.getElementById('episodes-list');
+            epList.innerHTML = ''; // Очистити старі
+
+            if (anime.episodes && anime.episodes.length > 0) {
+                anime.episodes.forEach(ep => {
+                    const btn = document.createElement('button');
+                    btn.className = 'episode-btn';
+                    btn.innerText = ep.name;
+                    btn.onclick = () => openPlayer(ep.url);
+                    epList.appendChild(btn);
+                });
+            } else {
+                epList.innerHTML = '<div style="color:gray;">Серії відсутні</div>';
+            }
+
+            // 4. Показати кнопку "Назад" в Telegram
+            tg.BackButton.show();
+            window.scrollTo(0, 0);
+        }
+
+        function showHome() {
+            document.getElementById('details-view').style.display = 'none';
+            document.getElementById('home-view').style.display = 'block';
+            tg.BackButton.hide();
+        }
+
+        // --- ПОШУК ---
+        document.getElementById('search-input').addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            const filtered = allAnimeData.filter(i => i.title.toLowerCase().includes(term));
             renderGrid(filtered);
         });
 
-        // 4. Логіка Плеєра
+        // --- ПЛЕЄР ---
         const modal = document.getElementById('player-modal');
         const videoEl = document.getElementById('main-player');
 
@@ -249,17 +279,14 @@
             modal.style.display = 'flex';
             videoEl.src = url;
             videoEl.play();
-            tg.enableClosingConfirmation(); // Запитувати підтвердження перед закриттям вікна
         }
 
         function closePlayer() {
             modal.style.display = 'none';
             videoEl.pause();
-            videoEl.src = ""; // Зупиняємо завантаження
-            tg.disableClosingConfirmation();
+            videoEl.src = "";
         }
 
-        // Запуск
         loadAnime();
     </script>
 </body>
