@@ -1,19 +1,19 @@
 [
     {
         "id": 1,
-        "title": "Наруто: Епізод 1",
+        "title": "Наруто",
         "poster": "https://upload.wikimedia.org/wikipedia/en/9/94/NarutoCoverTankobon1.jpg",
         "stream_id": 25
     },
     {
         "id": 2,
-        "title": "Бліч: Епізод 1",
-        "poster": "https://upload.wikimedia.org/wikipedia/en/7/72/Bleach_Vol_1.jpg",
+        "title": "Доктор Стоун",
+        "poster": "https://kinogo.online/uploads/posts/2021-03/1614924674-652224805.jpg",
         "stream_id": 27
     },
     {
         "id": 3,
-        "title": "Ванпачмен 6 серия",
+        "title": "Ванпачмен",
         "stream_url": "https://unindustriously-subglacial-adina.ngrok-free.dev/stream/28?hash=df2593",
         "poster": "https://nekoteka.com/sites/default/files/styles/420x580/public/anime_poster/one-punch-man-3.jpg?itok=vQzQA9z3"
     }
