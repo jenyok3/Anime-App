@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Anime Stream</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body {
+            background-color: var(--tg-theme-bg-color, #1c1c1e);
+            color: var(--tg-theme-text-color, #ffffff);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 10px;
+        }
+
+        .header {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            padding-left: 5px;
+        }
+
+        .anime-card {
+            background-color: var(--tg-theme-secondary-bg-color, #2c2c2e);
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+
+        .video-container {
+            position: relative;
+            width: 100%;
+            padding-top: 56.25%; /* 16:9 Aspect Ratio */
+            background: #000;
+        }
+
+        video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .info {
+            padding: 12px;
+        }
+
+        .title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .status {
+            font-size: 12px;
+            color: var(--tg-theme-hint-color, #aaaaaa);
+        }
+        
+        /* Кнопка оновлення */
+        .refresh-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--tg-theme-button-color, #2481cc);
+            color: var(--tg-theme-button-text-color, #fff);
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">Моя бібліотека</div>
+    <div id="list">
+        <div style="text-align:center; margin-top: 50px; color: gray;">Завантаження...</div>
+    </div>
+
+    <button class="refresh-btn" onclick="location.reload()">↻</button>
+
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.expand(); // Розгорнути на весь екран
+        tg.enableClosingConfirmation();
+
+        // Функція завантаження даних
+        async function loadAnime() {
+            try {
+                // Додаємо timestamp, щоб браузер не кешував старий JSON
+                const response = await fetch('anime_data.json?t=' + new Date().getTime());
+                
+                if (!response.ok) throw new Error("Не знайдено базу даних");
+                
+                const data = await response.json();
+                const container = document.getElementById('list');
+                container.innerHTML = '';
+
+                if(data.length === 0) {
+                    container.innerHTML = '<div style="text-align:center; padding:20px;">Поки що пусто. Перешліть відео боту!</div>';
+                    return;
+                }
+
+                // Перебираємо відео з кінця (найновіші зверху)
+                data.reverse().forEach(item => {
+                    const card = document.createElement('div');
+                    card.className = 'anime-card';
+                    card.innerHTML = `
+                        <div class="video-container">
+                            <video controls preload="metadata" poster="${item.poster}">
+                                <source src="${item.stream_url}" type="video/mp4">
+                            </video>
+                        </div>
+                        <div class="info">
+                            <div class="title">${item.title}</div>
+                            <div class="status">ID: ${item.id}</div>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                });
+
+            } catch (error) {
+                document.getElementById('list').innerHTML = `<div style="color:red; text-align:center;">Помилка: ${error.message}</div>`;
+            }
+        }
+
+        loadAnime();
+    </script>
+</body>
+</html>

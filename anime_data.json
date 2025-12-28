@@ -1,0 +1,20 @@
+[
+    {
+        "id": 1,
+        "title": "Наруто: Епізод 1",
+        "poster": "https://upload.wikimedia.org/wikipedia/en/9/94/NarutoCoverTankobon1.jpg",
+        "stream_id": 25
+    },
+    {
+        "id": 2,
+        "title": "Бліч: Епізод 1",
+        "poster": "https://upload.wikimedia.org/wikipedia/en/7/72/Bleach_Vol_1.jpg",
+        "stream_id": 27
+    },
+    {
+        "id": 3,
+        "title": "6.1080.961d22b8c9e02d92.mp4",
+        "stream_url": "https://unindustriously-subglacial-adina.ngrok-free.dev/stream/28?hash=df2593",
+        "poster": "https://via.placeholder.com/300x450"
+    }
+]
