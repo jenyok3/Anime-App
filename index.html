@@ -52,16 +52,16 @@
             padding-bottom: calc(80px + var(--safe-bottom)); 
         }
 
-        /* --- КАРТКА АНІМЕ (OVERLAY STYLE) --- */
+        /* --- КАРТКА АНІМЕ (MINIMALIST OVERLAY) --- */
         .anime-card {
             background-color: var(--card-bg); border-radius: 12px; 
             position: relative; 
-            overflow: hidden; /* Щоб контент не вилазив за межі закруглення */
+            overflow: hidden; 
             box-shadow: 0 4px 8px rgba(0,0,0,0.6); 
             border: 1px solid #222;
             transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
             cursor: pointer;
-            aspect-ratio: 2 / 3; /* Фіксуємо пропорції постера */
+            aspect-ratio: 2 / 3; 
         }
 
         .poster-image { 
@@ -69,63 +69,77 @@
             object-fit: cover; transition: transform 0.4s;
         }
 
-        /* Звичайна назва (видно, коли не наводиш) */
+        /* Звичайна назва знизу (видно, коли не наводиш) */
         .default-info {
             position: absolute; bottom: 0; left: 0; width: 100%;
-            padding: 15px 10px 10px;
+            padding: 20px 10px 10px;
             background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 100%);
             z-index: 1; transition: opacity 0.2s;
         }
         .default-title { font-size: 13px; font-weight: 600; text-shadow: 0 1px 3px black; }
 
-        /* --- БЛОК ІНФОРМАЦІЇ ПРИ НАВЕДЕННІ (OVERLAY) --- */
+        /* --- ОВЕРЛЕЙ ПРИ НАВЕДЕННІ --- */
         .overlay-info {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.6) 50%, rgba(0,0,0,0.1) 100%);
-            display: flex; flex-direction: column; justify-content: flex-end;
-            padding: 12px; box-sizing: border-box;
-            opacity: 0; /* Приховано за замовчуванням */
+            background: rgba(0, 0, 0, 0.75); /* Темний фон на все зображення */
+            backdrop-filter: blur(3px); /* Легке розмиття фону */
+            display: flex; flex-direction: column; justify-content: space-between;
+            padding: 15px; box-sizing: border-box;
+            opacity: 0; 
             transition: opacity 0.3s ease;
             z-index: 2;
+            text-align: center;
         }
 
-        .overlay-title { font-size: 14px; font-weight: 700; margin-bottom: 5px; line-height: 1.2; }
-        .overlay-meta { font-size: 10px; color: #ccc; margin-bottom: 10px; display: flex; gap: 8px; align-items: center; }
-        .tag-hd { border: 1px solid #999; padding: 0 4px; border-radius: 3px; font-size: 9px; }
-        .match-score { color: #46d369; font-weight: bold; }
-
-        .overlay-buttons { display: flex; gap: 8px; width: 100%; }
-        
-        .btn-overlay {
-            flex: 1; height: 32px; border: none; border-radius: 6px;
-            font-size: 13px; font-weight: 600; cursor: pointer;
-            display: flex; align-items: center; justify-content: center; gap: 5px;
-            transition: 0.2s;
+        /* Верхня частина (епізоди) */
+        .overlay-top { display: flex; justify-content: center; width: 100%; }
+        .episode-badge {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 6px 12px; border-radius: 20px;
+            font-size: 11px; font-weight: 600; color: #ddd;
+            backdrop-filter: blur(5px);
         }
-        .btn-watch { background: white; color: black; }
-        .btn-watch:hover { background: #e6e6e6; }
-        
-        .btn-list { background: rgba(255,255,255,0.2); color: white; min-width: 32px; flex: 0; }
-        .btn-list:hover { background: rgba(255,255,255,0.3); }
-        .btn-list.in-queue { border: 1px solid var(--accent-color); color: var(--accent-color); background: rgba(191,0,255,0.1); }
 
-        /* --- ЕФЕКТИ НАВЕДЕННЯ (ТІЛЬКИ ПК) --- */
+        /* Центр (Назва + мета) */
+        .overlay-center { display: flex; flex-direction: column; gap: 5px; margin-bottom: 10px; }
+        .overlay-title { font-size: 15px; font-weight: 700; line-height: 1.3; color: white; margin-bottom: 5px; }
+        .overlay-meta { font-size: 10px; color: #aaa; line-height: 1.4; }
+
+        /* Низ (Кнопки) - Мінімалістичні */
+        .overlay-buttons { display: flex; gap: 10px; width: 100%; align-items: center; }
+        
+        .btn-glass {
+            background: rgba(255, 255, 255, 0.15); /* Прозорий сірий */
+            border: none; border-radius: 14px;
+            color: white; font-size: 14px; font-weight: 600;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: 0.2s;
+            backdrop-filter: blur(5px);
+            height: 44px;
+        }
+        
+        .btn-watch { flex-grow: 1; gap: 8px; } /* Широка кнопка */
+        .btn-watch:hover { background: rgba(255, 255, 255, 0.25); }
+        
+        .btn-queue { width: 44px; flex-shrink: 0; font-size: 20px; } /* Квадратна кнопка */
+        .btn-queue:hover { background: rgba(255, 255, 255, 0.25); }
+        .btn-queue.in-queue { color: var(--accent-color); background: rgba(191,0,255,0.15); border: 1px solid rgba(191,0,255,0.3); }
+
+        /* --- ЕФЕКТИ НАВЕДЕННЯ (ПК) --- */
         @media (hover: hover) {
             .anime-card:hover {
                 transform: scale(1.05);
-                box-shadow: 0 0 20px rgba(0,0,0,0.8);
-                border-color: #555;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+                border-color: #444;
                 z-index: 10;
             }
             .anime-card:hover .overlay-info { opacity: 1; }
             .anime-card:hover .default-info { opacity: 0; }
-            .anime-card:hover .poster-image { transform: scale(1.1); }
         }
 
-        /* На мобільному просто клік */
         .anime-card:active { transform: scale(0.96); }
 
-        /* --- ІНШІ СТИЛІ (ПРОФІЛЬ, ДЕТАЛІ, ПЛЕЄР) --- */
+        /* --- ІНШІ СТИЛІ --- */
         #details-view, #profile-view { display: none; min-height: 100vh; padding-bottom: 90px; }
         .details-header { position: relative; height: 40vh; }
         .backdrop-image { width: 100%; height: 100%; object-fit: cover; mask-image: linear-gradient(to bottom, black 20%, transparent 100%); -webkit-mask-image: linear-gradient(to bottom, black 20%, transparent 100%); }
@@ -188,15 +202,9 @@
             </div>
         </div>
         <div class="profile-menu">
-            <div class="menu-item" onclick="showFavorites()">
-                <span>❤️ Моє улюблене</span><span style="color:#555">›</span>
-            </div>
-            <div class="menu-item" onclick="showQueue()">
-                <span>➕ Список перегляду</span><span style="color:#555">›</span>
-            </div>
-            <div class="menu-item" style="border:none;">
-                <span>⚙️ Налаштування</span><span style="color:#555">›</span>
-            </div>
+            <div class="menu-item" onclick="showFavorites()"><span>❤️ Моє улюблене</span><span style="color:#555">›</span></div>
+            <div class="menu-item" onclick="showQueue()"><span>➕ Список перегляду</span><span style="color:#555">›</span></div>
+            <div class="menu-item" style="border:none;"><span>⚙️ Налаштування</span><span style="color:#555">›</span></div>
         </div>
     </div>
 
@@ -231,7 +239,6 @@
                 document.getElementById('home-view').style.display = 'block';
                 document.getElementById('btn-home').className = 'nav-btn active';
                 tg.BackButton.hide();
-                // Скидання фільтру
                 if(document.getElementById('search-input').value.includes("❤️") || document.getElementById('search-input').value.includes("➕")) {
                      document.getElementById('search-input').value = "";
                      renderGrid(allAnimeData);
@@ -262,7 +269,7 @@
             } catch (error) { console.error(error); }
         }
 
-        // --- ГОЛОВНА ЛОГІКА ВІДОБРАЖЕННЯ КАРТОК ---
+        // --- ГЕНЕРАЦІЯ СІТКИ З НОВИМ ДИЗАЙНОМ ---
         function renderGrid(items) {
             const container = document.getElementById('anime-grid');
             container.innerHTML = '';
@@ -270,6 +277,7 @@
 
             items.forEach(item => {
                 const inQueue = queue.includes(item.id);
+                const epCount = item.episodes ? item.episodes.length : 0;
                 const card = document.createElement('div');
                 card.className = 'anime-card';
                 
@@ -281,18 +289,24 @@
                     </div>
 
                     <div class="overlay-info">
-                        <div class="overlay-title">${item.title}</div>
-                        <div class="overlay-meta">
-                            <span class="match-score">98% Match</span>
-                            <span class="tag-hd">16+</span>
-                            <span>2024</span>
+                        <div class="overlay-top">
+                            <span class="episode-badge">${epCount} епізодів</span>
                         </div>
+
+                        <div class="overlay-center">
+                            <div class="overlay-title">${item.title}</div>
+                            <div class="overlay-meta">
+                                2024 • TV • 16+<br>
+                                Комедія • Екшн
+                            </div>
+                        </div>
+
                         <div class="overlay-buttons">
-                            <button class="btn-overlay btn-watch" onclick="event.stopPropagation(); showDetailsById(${item.id})">
+                            <button class="btn-glass btn-watch" onclick="event.stopPropagation(); showDetailsById(${item.id})">
                                 ▶ Дивитися
                             </button>
-                            <button class="btn-overlay btn-list ${inQueue ? 'in-queue' : ''}" onclick="event.stopPropagation(); toggleQueue(${item.id}, this)">
-                                ${inQueue ? '✓' : '➕'}
+                            <button class="btn-glass btn-queue ${inQueue ? 'in-queue' : ''}" onclick="event.stopPropagation(); toggleQueue(${item.id}, this)">
+                                ${inQueue ? '✓' : '≡+'}
                             </button>
                         </div>
                     </div>
@@ -317,7 +331,7 @@
                 if(tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
             } else {
                 queue.splice(index, 1);
-                btn.innerHTML = '➕'; btn.classList.remove('in-queue');
+                btn.innerHTML = '≡+'; btn.classList.remove('in-queue');
                 if(tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
             }
             localStorage.setItem('myQueue', JSON.stringify(queue));
