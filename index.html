@@ -37,7 +37,8 @@
             background-color: rgba(5, 5, 5, 0.95);
             backdrop-filter: blur(20px);
             padding: calc(10px + var(--safe-top)) 15px 10px;
-            border-bottom: 1px solid #222;
+            /* Нижня межа пошуку теж може бути зайвою, але залишу тонкою */
+            border-bottom: 1px solid #1a1a1a;
         }
 
         #search-input {
@@ -55,13 +56,15 @@
             padding-bottom: calc(80px + var(--safe-bottom)); 
         }
 
-        /* --- КАРТКА --- */
+        /* --- КАРТКА (БЕЗ РАМКИ) --- */
         .anime-card {
-            background-color: var(--card-bg); border-radius: 12px; 
+            background-color: var(--card-bg); 
+            border-radius: 12px; 
             position: relative; 
             overflow: hidden; 
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5); 
-            border: 1px solid #222;
+            /* Тінь залишаємо для об'єму, але рамку (border) прибираємо */
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5); 
+            border: none; /* ПРИБРАНО РАМКУ */
             cursor: pointer;
             aspect-ratio: 2 / 3; 
             transform: translateZ(0);
@@ -75,7 +78,7 @@
 
         .default-gradient {
             position: absolute; bottom: 0; left: 0; width: 100%; height: 70%;
-            background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, transparent 100%);
+            background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 100%);
             z-index: 1; transition: opacity 0.2s;
         }
         
@@ -94,7 +97,7 @@
         .overlay-info {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: var(--overlay-bg);
-            backdrop-filter: blur(8px); /* Сильне розмиття фону */
+            backdrop-filter: blur(8px);
             z-index: 5;
             display: flex; flex-direction: column; justify-content: space-between;
             padding: 12px;
@@ -115,24 +118,22 @@
         }
         .info-meta { font-size: 10px; color: #aaa; font-weight: 500; }
 
-        /* --- ОНОВЛЕНІ КНОПКИ (CLEAN & SUBTLE) --- */
+        /* --- КНОПКИ --- */
         .buttons-row {
             display: flex; gap: 8px; width: 100%;
             align-items: center; justify-content: center;
         }
 
         .btn-clean {
-            background-color: var(--btn-glass); /* Прозорий фон */
-            border: none; /* Жодних рамок */
-            border-radius: 8px; /* Акуратні кути */
+            background-color: var(--btn-glass); 
+            border: none; 
+            border-radius: 8px; 
             color: #fff; height: 38px;
             display: flex; align-items: center; justify-content: center;
             cursor: pointer; transition: 0.2s;
         }
         
-        /* При натисканні стає трохи світлішим */
         .btn-clean:active { background-color: rgba(255, 255, 255, 0.25); transform: scale(0.97); }
-        /* Ховер на ПК */
         @media(hover: hover) {
             .btn-clean:hover { background-color: rgba(255, 255, 255, 0.2); }
         }
@@ -148,9 +149,8 @@
         }
         .btn-list svg { fill: white; width: 16px; height: 16px; }
         
-        /* Активна кнопка (в списку) - акцент */
         .btn-list.in-queue { 
-            background: rgba(191,0,255,0.2); /* Легкий фіолетовий тінт */
+            background: rgba(191,0,255,0.2); 
             color: var(--accent-color);
         }
         .btn-list.in-queue svg { fill: var(--accent-color); }
@@ -160,9 +160,9 @@
         @media (hover: hover) {
             .anime-card:hover {
                 transform: scale(1.05);
-                box-shadow: 0 10px 30px rgba(0,0,0,0.8);
-                border-color: #333;
+                box-shadow: 0 12px 30px rgba(0,0,0,0.8); /* Більша тінь при наведенні */
                 z-index: 10;
+                /* Рамки при наведенні теж немає, щоб зберегти стиль */
             }
             .anime-card:hover .overlay-info { opacity: 1; }
             .anime-card:hover .default-title-bar { opacity: 0; }
