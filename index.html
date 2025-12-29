@@ -30,7 +30,7 @@
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             margin: 0; padding: 0;
             overscroll-behavior-y: none; 
-            -webkit-tap-highlight-color: transparent; /* Глобальне вимкнення синього підсвічування */
+            -webkit-tap-highlight-color: transparent;
         }
 
         /* --- ПОШУК --- */
@@ -65,21 +65,23 @@
             position: relative; 
             box-shadow: 0 4px 8px rgba(0,0,0,0.6); 
             border: 1px solid #222;
-            transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s; /* Пришвидшив анімацію для телефону */
+            transition: transform 0.1s, box-shadow 0.1s, border-color 0.1s;
             cursor: pointer;
-            
-            /* ВАЖЛИВО: Вимикаємо системне підсвічування саме для карток */
             -webkit-tap-highlight-color: transparent !important;
             user-select: none; -webkit-user-select: none;
         }
         
-        /* 🔥 ЕФЕКТ НАТИСКАННЯ НА ТЕЛЕФОНІ (ACTIVE) 🔥 */
-        /* Використовуємо !important, щоб перебити будь-які інші стилі */
+        /* 🔥 ЕФЕКТ НАТИСКАННЯ НА ТЕЛЕФОНІ (ACTIVE) - ЗБІЛЬШЕНИЙ 🔥 */
         .anime-card:active { 
             transform: scale(0.96); 
-            border-color: #666 !important; 
-            box-shadow: 0 0 20px rgba(150, 150, 150, 0.2) !important;
-            background-color: #1a1a1a !important; /* Трохи світліший фон при натисканні */
+            border-color: #888 !important; /* Світліша рамка */
+            background-color: #222 !important;
+            
+            /* Зміни тут:
+               0 0 50px -> радіус розмиття (наскільки далеко світить)
+               rgba(..., 0.5) -> яскравість (було 0.2, стало 0.5 - яскравіше)
+            */
+            box-shadow: 0 0 50px rgba(180, 180, 180, 0.5) !important;
         }
 
         /* ЕФЕКТ НАВЕДЕННЯ (ПК) */
@@ -112,7 +114,7 @@
             cursor: pointer; touch-action: manipulation; transition: all 0.2s;
             -webkit-tap-highlight-color: transparent;
         }
-        .episode-btn:active { background-color: #444 !important; border-color: #666 !important; transform: scale(0.95); box-shadow: 0 0 10px rgba(150,150,150,0.2) !important; }
+        .episode-btn:active { background-color: #444 !important; border-color: #888 !important; transform: scale(0.95); box-shadow: 0 0 20px rgba(180,180,180,0.4) !important; }
         @media (hover: hover) {
             .episode-btn:hover { background-color: #444; box-shadow: 0 0 10px rgba(150,150,150,0.2); border-color: #666; }
         }
@@ -211,7 +213,7 @@
         </div>
         
         <div style="padding: 30px; text-align: center; color: #444; font-size: 12px;">
-            Anime App Mobile v1.7
+            Anime App Mobile v1.8 (Big Glow)
         </div>
     </div>
 
