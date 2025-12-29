@@ -65,26 +65,24 @@
             position: relative; 
             box-shadow: 0 4px 8px rgba(0,0,0,0.6); 
             border: 1px solid #222;
-            transition: transform 0.1s, box-shadow 0.1s, border-color 0.1s;
+            
+            /* ЗМІНА: Більш повільна і плавна анімація (0.3s cubic-bezier) */
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            
             cursor: pointer;
             -webkit-tap-highlight-color: transparent !important;
             user-select: none; -webkit-user-select: none;
         }
         
-        /* 🔥 ЕФЕКТ НАТИСКАННЯ НА ТЕЛЕФОНІ (ACTIVE) - ЗБІЛЬШЕНИЙ 🔥 */
+        /* 🔥 ЕФЕКТ НАТИСКАННЯ НА ТЕЛЕФОНІ 🔥 */
         .anime-card:active { 
-            transform: scale(0.96); 
-            border-color: #888 !important; /* Світліша рамка */
+            transform: scale(0.95); /* Трохи глибше натискання */
+            border-color: #999 !important; 
             background-color: #222 !important;
-            
-            /* Зміни тут:
-               0 0 50px -> радіус розмиття (наскільки далеко світить)
-               rgba(..., 0.5) -> яскравість (було 0.2, стало 0.5 - яскравіше)
-            */
             box-shadow: 0 0 50px rgba(180, 180, 180, 0.5) !important;
+            transition-duration: 0.1s; /* Натискання відбувається швидко */
         }
 
-        /* ЕФЕКТ НАВЕДЕННЯ (ПК) */
         @media (hover: hover) {
             .anime-card:hover {
                 border-color: #666; 
@@ -111,13 +109,12 @@
         .episode-btn { 
             background: rgba(255, 255, 255, 0.08); color: white; border: 1px solid rgba(191, 0, 255, 0.2); 
             padding: 12px 0; border-radius: 8px; font-size: 14px; font-weight: 500; text-align: center; 
-            cursor: pointer; touch-action: manipulation; transition: all 0.2s;
+            cursor: pointer; touch-action: manipulation; 
+            transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
             -webkit-tap-highlight-color: transparent;
         }
-        .episode-btn:active { background-color: #444 !important; border-color: #888 !important; transform: scale(0.95); box-shadow: 0 0 20px rgba(180,180,180,0.4) !important; }
-        @media (hover: hover) {
-            .episode-btn:hover { background-color: #444; box-shadow: 0 0 10px rgba(150,150,150,0.2); border-color: #666; }
-        }
+        .episode-btn:active { background-color: #444 !important; border-color: #888 !important; transform: scale(0.92); box-shadow: 0 0 20px rgba(180,180,180,0.4) !important; transition-duration: 0.1s; }
+        @media (hover: hover) { .episode-btn:hover { background-color: #444; box-shadow: 0 0 10px rgba(150,150,150,0.2); border-color: #666; } }
 
         /* --- ПРОФІЛЬ --- */
         #profile-view { display: none; padding-bottom: 100px; }
@@ -213,7 +210,7 @@
         </div>
         
         <div style="padding: 30px; text-align: center; color: #444; font-size: 12px;">
-            Anime App Mobile v1.8 (Big Glow)
+            Anime App Mobile v1.9 (Smooth Touch)
         </div>
     </div>
 
@@ -310,9 +307,15 @@
                         <div class="title">${item.title}</div>
                     </div>
                 `;
+                
+                // ВАЖЛИВА ЗМІНА: Додано затримку (setTimeout), щоб було видно анімацію
                 card.onclick = () => {
                     if(tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
-                    showDetails(item);
+                    
+                    // Затримка 200 мілісекунд перед переходом
+                    setTimeout(() => {
+                        showDetails(item);
+                    }, 200);
                 };
                 container.appendChild(card);
             });
@@ -337,7 +340,10 @@
                     btn.innerText = ep.name;
                     btn.onclick = () => {
                         if(tg.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
-                        openPlayer(ep.url);
+                        // Теж додаємо затримку для кнопок епізодів
+                        setTimeout(() => {
+                            openPlayer(ep.url);
+                        }, 150);
                     };
                     epList.appendChild(btn);
                 });
