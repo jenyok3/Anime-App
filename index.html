@@ -7,12 +7,15 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         :root {
+            /* --- ТЕМА: BLACK & PURPLE --- */
             --bg-color: #000000;
             --text-color: #ffffff;
             --card-bg: #121212;
             --hint-color: #b0b0b0;
             --accent-color: #bf00ff;
             --accent-glow: rgba(191, 0, 255, 0.4);
+            
+            /* Безпечні зони для телефонів */
             --safe-top: env(safe-area-inset-top, 0px);
             --safe-bottom: env(safe-area-inset-bottom, 20px);
         }
@@ -26,7 +29,7 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* --- HEADER & SEARCH --- */
+        /* --- ПОШУК (HEADER) --- */
         .search-container {
             position: sticky; top: 0; z-index: 100;
             background-color: rgba(0, 0, 0, 0.85);
@@ -40,57 +43,80 @@
             width: 100%; padding: 12px 15px;
             border-radius: 12px; border: 1px solid #333;
             background-color: #1a1a1a; color: white;
-            font-size: 16px; outline: none; appearance: none;
+            font-size: 16px; outline: none; appearance: none; box-shadow: none;
         }
         #search-input:focus { border-color: var(--accent-color); box-shadow: 0 0 15px var(--accent-glow); }
 
-        /* --- GRID --- */
+        /* --- СІТКА (GRID) --- */
         .grid-container {
             display: grid; grid-template-columns: repeat(2, 1fr);
             gap: 12px; padding: 15px;
-            padding-bottom: 100px; /* Більший відступ для меню */
+            /* ВАЖЛИВО: Відступ знизу для навігації */
+            padding-bottom: calc(80px + var(--safe-bottom)); 
         }
+
         .anime-card {
             background-color: var(--card-bg); border-radius: 12px; overflow: hidden;
-            position: relative; border: 1px solid #222;
+            position: relative; box-shadow: 0 4px 8px rgba(0,0,0,0.6); border: 1px solid #222;
         }
-        .anime-card:active { transform: scale(0.97); border-color: var(--accent-color); }
+        .anime-card:active { transform: scale(0.97); border-color: var(--accent-color); transition: transform 0.1s; }
         .poster-wrapper { width: 100%; padding-top: 145%; position: relative; background-color: #050505; }
         .poster-image { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
         .info { padding: 10px; }
         .title { font-size: 13px; font-weight: 600; line-height: 1.4; color: #eee; }
 
-        /* --- DETAILS VIEW --- */
-        #details-view { display: none; background-color: var(--bg-color); min-height: 100vh; padding-bottom: 100px; }
+        /* --- СТОРІНКА ДЕТАЛЕЙ --- */
+        #details-view { display: none; background-color: var(--bg-color); min-height: 100vh; padding-bottom: 90px; }
         .details-header { position: relative; width: 100%; height: 40vh; }
         .backdrop-image { width: 100%; height: 100%; object-fit: cover; mask-image: linear-gradient(to bottom, black 20%, transparent 100%); -webkit-mask-image: linear-gradient(to bottom, black 20%, transparent 100%); }
-        .details-content { padding: 0 20px; margin-top: -60px; position: relative; z-index: 2; }
-        .details-title { font-size: 24px; font-weight: 800; margin-bottom: 8px; text-shadow: 0 2px 10px rgba(0,0,0,1); }
-        .details-desc { font-size: 14px; color: var(--hint-color); margin-bottom: 25px; background: rgba(20, 20, 20, 0.6); backdrop-filter: blur(5px); padding: 12px; border-radius: 10px; }
-        .section-title { font-size: 16px; font-weight: 700; margin-bottom: 12px; border-left: 3px solid var(--accent-color); padding-left: 10px; text-transform: uppercase; }
+        .details-content { padding: 0 20px; margin-top: -60px; position: relative; z-index: 2; padding-bottom: calc(50px + var(--safe-bottom)); }
+        .details-title { font-size: 24px; font-weight: 800; margin-bottom: 8px; text-shadow: 0 2px 10px rgba(0,0,0,1); color: #fff; line-height: 1.2; }
+        .details-desc { font-size: 14px; color: var(--hint-color); margin-bottom: 25px; line-height: 1.5; background: rgba(20, 20, 20, 0.6); backdrop-filter: blur(5px); padding: 12px; border-radius: 10px; }
+        .section-title { font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 12px; padding-left: 10px; border-left: 3px solid var(--accent-color); text-transform: uppercase; }
         .episodes-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
-        .episode-btn { background: rgba(255, 255, 255, 0.08); color: white; border: 1px solid rgba(191, 0, 255, 0.2); padding: 12px 0; border-radius: 8px; font-size: 14px; text-align: center; cursor: pointer; }
-        .episode-btn:active { background-color: var(--accent-color); transform: scale(0.95); }
+        .episode-btn { background: rgba(255, 255, 255, 0.08); color: white; border: 1px solid rgba(191, 0, 255, 0.2); padding: 12px 0; border-radius: 8px; font-size: 14px; font-weight: 500; text-align: center; cursor: pointer; touch-action: manipulation; }
+        .episode-btn:active { background-color: var(--accent-color); border-color: var(--accent-color); transform: scale(0.95); }
 
-        /* --- PROFILE VIEW --- */
+        /* --- НОВЕ: СТИЛІ ПРОФІЛЮ --- */
         #profile-view { display: none; padding-bottom: 100px; }
-        .profile-header { padding: 40px 20px; background: linear-gradient(180deg, rgba(191,0,255,0.2) 0%, transparent 100%); display: flex; align-items: center; gap: 20px; }
-        .avatar-circle { width: 70px; height: 70px; background: #222; border-radius: 50%; border: 2px solid var(--accent-color); display: flex; align-items: center; justify-content: center; font-size: 30px; box-shadow: 0 0 15px rgba(191, 0, 255, 0.3); }
-        .profile-info h2 { margin: 0; font-size: 22px; }
-        .user-id { color: var(--hint-color); font-size: 13px; }
-        .profile-menu { margin: 20px; background-color: var(--card-bg); border-radius: 15px; border: 1px solid #222; }
-        .menu-item { padding: 18px; display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.05); cursor: pointer; }
+        .profile-header { padding: 40px 20px; background: linear-gradient(180deg, rgba(191,0,255,0.15) 0%, transparent 100%); display: flex; align-items: center; gap: 20px; }
+        .avatar-circle { width: 70px; height: 70px; background: #1a1a1a; border-radius: 50%; border: 2px solid var(--accent-color); display: flex; align-items: center; justify-content: center; font-size: 28px; color: #fff; box-shadow: 0 0 20px rgba(191, 0, 255, 0.2); }
+        .profile-info h2 { margin: 0; font-size: 22px; color: white; }
+        .user-id { color: var(--hint-color); font-size: 13px; margin-top: 4px; display: block; }
+        
+        .profile-menu { margin: 20px; background-color: var(--card-bg); border-radius: 16px; border: 1px solid #222; overflow: hidden; }
+        .menu-item { padding: 18px 20px; display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.05); cursor: pointer; transition: background 0.2s; font-size: 15px; }
+        .menu-item:last-child { border-bottom: none; }
         .menu-item:active { background-color: rgba(191, 0, 255, 0.1); }
-        .arrow { color: #555; }
+        .arrow { color: #555; font-weight: bold; }
 
-        /* --- BOTTOM NAV --- */
-        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; height: calc(60px + var(--safe-bottom)); background-color: rgba(0, 0, 0, 0.95); backdrop-filter: blur(10px); border-top: 1px solid #333; display: flex; justify-content: space-around; padding-bottom: var(--safe-bottom); z-index: 90; }
-        .nav-btn { background: none; border: none; color: #777; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 50%; font-size: 11px; margin-top: 5px; cursor: pointer; transition: color 0.2s; }
+        /* --- НОВЕ: НИЖНЯ НАВІГАЦІЯ --- */
+        .bottom-nav {
+            position: fixed; bottom: 0; left: 0; width: 100%;
+            height: calc(60px + var(--safe-bottom));
+            background-color: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            border-top: 1px solid #333;
+            display: flex; justify-content: space-around;
+            padding-bottom: var(--safe-bottom);
+            z-index: 90;
+        }
+
+        .nav-btn {
+            background: none; border: none;
+            color: #666;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            width: 50%; font-size: 11px; margin-top: 5px;
+            cursor: pointer; transition: color 0.2s;
+        }
+
+        .nav-btn span:first-child { font-size: 22px; margin-bottom: 4px; }
         .nav-btn.active { color: var(--accent-color); }
+        .nav-btn.active span:first-child { text-shadow: 0 0 10px rgba(191,0,255,0.4); }
 
-        /* --- PLAYER --- */
+        /* --- ПЛЕЄР --- */
         .player-modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: #000; z-index: 9999; flex-direction: column; justify-content: center; align-items: center; }
-        .close-player-btn { position: absolute; top: max(20px, var(--safe-top)); right: 20px; color: white; background: rgba(50, 50, 50, 0.5); backdrop-filter: blur(4px); border: none; border-radius: 50%; width: 44px; height: 44px; font-size: 28px; display: flex; align-items: center; justify-content: center; z-index: 10000; cursor: pointer; }
+        .close-player-btn { position: absolute; top: max(20px, var(--safe-top)); right: 20px; color: white; background: rgba(50, 50, 50, 0.5); backdrop-filter: blur(4px); border: none; border-radius: 50%; width: 44px; height: 44px; font-size: 28px; line-height: 1; display: flex; align-items: center; justify-content: center; z-index: 10000; cursor: pointer; }
         video { width: 100%; max-height: 100vh; outline: none; }
     </style>
 </head>
@@ -110,6 +136,7 @@
         <div class="details-content">
             <div id="detail-title" class="details-title">Завантаження...</div>
             <div id="detail-desc" class="details-desc"></div>
+
             <div class="section-title">Епізоди</div>
             <div id="episodes-list" class="episodes-grid"></div>
         </div>
@@ -119,10 +146,11 @@
         <div class="profile-header">
             <div class="avatar-circle" id="user-avatar">👤</div>
             <div class="profile-info">
-                <h2 id="user-name">Гість</h2>
-                <span id="user-id" class="user-id">Запустіть у Telegram</span>
+                <h2 id="user-name">Користувач</h2>
+                <span id="user-id" class="user-id">ID: Loading...</span>
             </div>
         </div>
+
         <div class="profile-menu">
             <div class="menu-item">
                 <span>❤️ Моє улюблене</span>
@@ -137,16 +165,19 @@
                 <span class="arrow">›</span>
             </div>
         </div>
-        <div style="padding: 20px; text-align: center; color: #333; font-size: 12px;">Anime App v1.0</div>
+        
+        <div style="padding: 30px; text-align: center; color: #444; font-size: 12px;">
+            Anime App Mobile v1.1
+        </div>
     </div>
 
     <div class="bottom-nav">
         <button class="nav-btn active" onclick="switchTab('home')" id="btn-home">
-            <span style="font-size: 20px;">🏠</span>
+            <span>🏠</span>
             <span>Головна</span>
         </button>
         <button class="nav-btn" onclick="switchTab('profile')" id="btn-profile">
-            <span style="font-size: 20px;">👤</span>
+            <span>👤</span>
             <span>Профіль</span>
         </button>
     </div>
@@ -160,16 +191,60 @@
 
     <script>
         const tg = window.Telegram.WebApp;
-        tg.expand();
+        tg.expand(); 
+        
         if (tg.setHeaderColor) tg.setHeaderColor('#000000');
         if (tg.setBackgroundColor) tg.setBackgroundColor('#000000');
 
+        // Кнопка НАЗАД
         tg.BackButton.onClick(() => {
             showHome();
         });
 
         let allAnimeData = []; 
 
+        // --- ЛОГІКА ТАБІВ (НОВА) ---
+        function switchTab(tab) {
+            // Ховаємо всі екрани
+            document.getElementById('home-view').style.display = 'none';
+            document.getElementById('details-view').style.display = 'none';
+            document.getElementById('profile-view').style.display = 'none';
+
+            // Скидаємо активні кнопки меню
+            document.getElementById('btn-home').className = 'nav-btn';
+            document.getElementById('btn-profile').className = 'nav-btn';
+
+            if (tab === 'home') {
+                document.getElementById('home-view').style.display = 'block';
+                document.getElementById('btn-home').className = 'nav-btn active';
+                tg.BackButton.hide();
+            } else if (tab === 'profile') {
+                document.getElementById('profile-view').style.display = 'block';
+                document.getElementById('btn-profile').className = 'nav-btn active';
+                tg.BackButton.hide();
+                loadProfileData(); // Завантажуємо дані користувача
+            }
+        }
+
+        // Змінена функція showHome, щоб використовувати таби
+        function showHome() {
+            switchTab('home');
+        }
+
+        // --- ДАНІ КОРИСТУВАЧА ---
+        function loadProfileData() {
+            const user = tg.initDataUnsafe.user;
+            if (user) {
+                document.getElementById('user-name').innerText = user.first_name + (user.last_name ? " " + user.last_name : "");
+                document.getElementById('user-id').innerText = "ID: " + user.id;
+                if (user.first_name) document.getElementById('user-avatar').innerText = user.first_name[0].toUpperCase();
+            } else {
+                document.getElementById('user-name').innerText = "Гість";
+                document.getElementById('user-id').innerText = "Відкрийте через Telegram";
+            }
+        }
+
+        // --- ЗАВАНТАЖЕННЯ ДАНИХ ---
         async function loadAnime() {
             try {
                 const response = await fetch('anime_data.json?t=' + Date.now());
@@ -184,12 +259,17 @@
         function renderGrid(items) {
             const container = document.getElementById('anime-grid');
             container.innerHTML = '';
+
             items.forEach(item => {
                 const card = document.createElement('div');
                 card.className = 'anime-card';
                 card.innerHTML = `
-                    <div class="poster-wrapper"><img src="${item.poster}" class="poster-image" loading="lazy"></div>
-                    <div class="info"><div class="title">${item.title}</div></div>
+                    <div class="poster-wrapper">
+                        <img src="${item.poster}" class="poster-image" loading="lazy">
+                    </div>
+                    <div class="info">
+                        <div class="title">${item.title}</div>
+                    </div>
                 `;
                 card.onclick = () => {
                     if(tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
@@ -199,30 +279,9 @@
             });
         }
 
-        // --- NAVIGATION LOGIC ---
-        function switchTab(tab) {
-            document.getElementById('home-view').style.display = 'none';
-            document.getElementById('profile-view').style.display = 'none';
-            document.getElementById('details-view').style.display = 'none';
-            
-            document.getElementById('btn-home').className = 'nav-btn';
-            document.getElementById('btn-profile').className = 'nav-btn';
-
-            if (tab === 'home') {
-                document.getElementById('home-view').style.display = 'block';
-                document.getElementById('btn-home').className = 'nav-btn active';
-                tg.BackButton.hide();
-            } 
-            else if (tab === 'profile') {
-                document.getElementById('profile-view').style.display = 'block';
-                document.getElementById('btn-profile').className = 'nav-btn active';
-                tg.BackButton.hide();
-                loadProfileData();
-            }
-        }
-
+        // --- НАВІГАЦІЯ НА ДЕТАЛІ ---
         function showDetails(anime) {
-            // Приховуємо таби, бо ми на деталях
+            // Ховаємо таби, показуємо деталі
             document.getElementById('home-view').style.display = 'none';
             document.getElementById('profile-view').style.display = 'none';
             document.getElementById('details-view').style.display = 'block';
@@ -253,27 +312,14 @@
             window.scrollTo(0, 0);
         }
 
-        function showHome() {
-            switchTab('home');
-        }
-
-        function loadProfileData() {
-            const user = tg.initDataUnsafe.user;
-            if (user) {
-                document.getElementById('user-name').innerText = user.first_name + (user.last_name ? " " + user.last_name : "");
-                document.getElementById('user-id').innerText = "ID: " + user.id;
-                if (user.first_name) document.getElementById('user-avatar').innerText = user.first_name[0].toUpperCase();
-            }
-        }
-
-        // --- SEARCH ---
+        // --- ПОШУК ---
         document.getElementById('search-input').addEventListener('input', (e) => {
             const term = e.target.value.toLowerCase();
             const filtered = allAnimeData.filter(i => i.title.toLowerCase().includes(term));
             renderGrid(filtered);
         });
 
-        // --- PLAYER ---
+        // --- ПЛЕЄР ---
         const modal = document.getElementById('player-modal');
         const videoEl = document.getElementById('main-player');
 
