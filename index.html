@@ -19,21 +19,29 @@
             --safe-bottom: env(safe-area-inset-bottom, 20px);
         }
 
-        /* --- ПРИХОВУВАННЯ СКРОЛБАРІВ (ПОВЗУНКІВ) --- */
-        /* Для Chrome, Safari, Telegram Desktop */
-        ::-webkit-scrollbar {
-            display: none; /* Повністю ховає смугу */
-            width: 0px;
-            background: transparent;
+        /* --- 🔥 АГРЕСИВНЕ ПРИХОВУВАННЯ СКРОЛБАРІВ (ПК + МОБІЛЬНІ) 🔥 --- */
+        
+        /* 1. Глобальне вимкнення для всіх елементів (Chrome, Safari, Edge, Telegram Desktop) */
+        *::-webkit-scrollbar {
+            width: 0px !important;
+            height: 0px !important;
+            display: none !important;
+            background: transparent !important;
         }
 
-        /* Для Firefox та інших */
+        /* 2. Для Firefox */
+        html, body, * {
+            scrollbar-width: none !important;
+        }
+
+        /* 3. Для старих версій Edge/IE */
+        html, body, * {
+            -ms-overflow-style: none !important;
+        }
+
+        /* 4. Запобігання горизонтальному скролу */
         html, body {
-            scrollbar-width: none; /* Ховає смугу */
-            -ms-overflow-style: none; /* Для IE/Edge */
-            
-            /* Блокуємо горизонтальну прокрутку */
-            overflow-x: hidden; 
+            overflow-x: hidden;
             width: 100%;
         }
 
@@ -61,7 +69,7 @@
             border-radius: 12px; border: 1px solid #333;
             background-color: #1a1a1a; color: white;
             font-size: 16px; outline: none; appearance: none; box-shadow: none;
-            box-sizing: border-box; /* Важливо для запобігання вилізання за межі */
+            box-sizing: border-box; 
             transition: all 0.3s ease;
         }
         #search-input:focus { border-color: var(--accent-color); box-shadow: 0 0 15px var(--accent-glow); }
@@ -83,7 +91,7 @@
         
         .anime-card:active { transform: scale(0.97); border-color: var(--accent-color); }
 
-        /* ЕФЕКТ ПРИ НАВЕДЕННІ */
+        /* ЕФЕКТ ПРИ НАВЕДЕННІ (ЗБЕРЕЖЕНО) */
         @media (hover: hover) {
             .anime-card:hover {
                 border-color: var(--accent-color);
@@ -223,7 +231,7 @@
         </div>
         
         <div style="padding: 30px; text-align: center; color: #444; font-size: 12px;">
-            Anime App Mobile v1.3
+            Anime App Mobile v1.4
         </div>
     </div>
 
