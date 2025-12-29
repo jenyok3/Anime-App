@@ -64,7 +64,7 @@
             cursor: pointer; aspect-ratio: 2 / 3; 
             transform: translateZ(0); 
             -webkit-mask-image: -webkit-radial-gradient(white, black);
-            transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.4s ease;
+            transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
 
         .poster-image { 
@@ -72,20 +72,20 @@
             width: 100.5%; height: 100.5%; 
             object-fit: cover; display: block;
             transform: scale(1.01); 
-            transition: transform 0.5s ease;
+            transition: transform 0.4s ease;
         }
 
         .default-gradient {
             position: absolute; bottom: 0; left: 0; width: 100%; height: 70%;
             background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, transparent 100%);
-            z-index: 1; transition: opacity 0.3s;
+            z-index: 1; transition: opacity 0.2s;
             pointer-events: none;
         }
         
         .default-title-bar {
             position: absolute; bottom: 15px; left: 0; width: 100%;
             text-align: center; padding: 0 10px; z-index: 2;
-            transition: opacity 0.3s; pointer-events: none;
+            transition: opacity 0.2s; pointer-events: none;
         }
         .default-title-text {
             font-size: 13px; font-weight: 700; color: white;
@@ -101,32 +101,16 @@
             z-index: 5;
             display: flex; flex-direction: column; justify-content: space-between;
             padding: 12px;
-            opacity: 0; 
-            /* Плавна поява/зникнення */
-            transition: opacity 0.4s ease; 
-            pointer-events: none; /* За замовчуванням кліки проходять крізь нього */
+            opacity: 0; transition: opacity 0.2s ease;
+            pointer-events: none; /* Щоб кліки проходили, поки не активно */
+        }
+        
+        /* Коли активно (клас або ховер), вмикаємо кліки */
+        .anime-card.is-active .overlay-info,
+        .anime-card:hover .overlay-info {
+            pointer-events: auto;
         }
 
-        /* --- СТАН ACTIVE (Замість Hover/Active CSS) --- */
-        /* Цей клас додається через JS на 10 секунд */
-        .anime-card.is-active {
-            transform: scale(1.05);
-            box-shadow: 0 15px 40px rgba(0,0,0,0.8);
-            z-index: 10;
-        }
-        .anime-card.is-active .overlay-info {
-            opacity: 1;
-            pointer-events: auto; /* Тепер кнопки працюють */
-        }
-        .anime-card.is-active .default-title-bar,
-        .anime-card.is-active .default-gradient {
-            opacity: 0;
-        }
-        .anime-card.is-active .poster-image {
-            transform: scale(1.1);
-        }
-
-        /* --- ЕЛЕМЕНТИ ОВЕРЛЕЮ --- */
         .badge-container { display: flex; justify-content: center; margin-top: 5px; }
         .episode-badge {
             background: rgba(255, 255, 255, 0.1);
@@ -136,9 +120,12 @@
         }
 
         .info-center { text-align: center; display: flex; flex-direction: column; gap: 4px; margin-bottom: 10px; }
-        .info-title { font-size: 14px; font-weight: 800; color: white; line-height: 1.3; }
+        .info-title { 
+            font-size: 14px; font-weight: 800; color: white; line-height: 1.3; 
+        }
         .info-meta { font-size: 10px; color: #aaa; font-weight: 500; }
 
+        /* --- КНОПКИ --- */
         .buttons-row {
             display: flex; gap: 8px; width: 100%;
             align-items: center; justify-content: center;
@@ -146,20 +133,60 @@
 
         .btn-clean {
             background-color: var(--btn-glass); 
-            border: none; border-radius: 8px; 
+            border: none; 
+            border-radius: 8px; 
             color: #fff; height: 38px;
             display: flex; align-items: center; justify-content: center;
             cursor: pointer; transition: 0.2s;
         }
-        .btn-clean:active { background-color: rgba(255, 255, 255, 0.25); transform: scale(0.97); }
         
-        .btn-play { flex-grow: 1; font-size: 13px; font-weight: 600; gap: 6px; }
+        .btn-clean:active { background-color: rgba(255, 255, 255, 0.25); transform: scale(0.97); }
+        @media(hover: hover) {
+            .btn-clean:hover { background-color: rgba(255, 255, 255, 0.2); }
+        }
+
+        .btn-play {
+            flex-grow: 1; 
+            font-size: 13px; font-weight: 600; gap: 6px;
+        }
         .btn-play svg { fill: white; width: 12px; height: 12px; }
 
-        .btn-list { width: 38px; flex-shrink: 0; }
+        .btn-list {
+            width: 38px; flex-shrink: 0;
+        }
         .btn-list svg { fill: white; width: 16px; height: 16px; }
-        .btn-list.in-queue { background: rgba(191,0,255,0.2); color: var(--accent-color); }
+        
+        .btn-list.in-queue { 
+            background: rgba(191,0,255,0.2); 
+            color: var(--accent-color);
+        }
         .btn-list.in-queue svg { fill: var(--accent-color); }
+
+
+        /* --- ЕФЕКТИ ДЛЯ ПК (HOVER) --- */
+        @media (hover: hover) {
+            .anime-card:hover {
+                transform: scale(1.05);
+                box-shadow: 0 12px 30px rgba(0,0,0,0.8);
+                z-index: 10;
+            }
+            .anime-card:hover .overlay-info { opacity: 1; }
+            .anime-card:hover .default-title-bar { opacity: 0; }
+            .anime-card:hover .default-gradient { opacity: 0; }
+            .anime-card:hover .poster-image { transform: scale(1.1); }
+        }
+
+        /* --- ЕФЕКТИ ДЛЯ ТЕЛЕФОНУ (ACTIVE JS CLASS) --- */
+        .anime-card.is-active {
+            transform: scale(1.05);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.8);
+            z-index: 10;
+        }
+        .anime-card.is-active .overlay-info { opacity: 1; }
+        .anime-card.is-active .default-title-bar { opacity: 0; }
+        .anime-card.is-active .default-gradient { opacity: 0; }
+        .anime-card.is-active .poster-image { transform: scale(1.1); }
+
 
         /* --- ІНШЕ --- */
         #details-view, #profile-view { display: none; padding-bottom: 90px; }
@@ -243,7 +270,7 @@
 
         let allAnimeData = []; 
         let currentAnimeId = null;
-        let activeCardTimeout = null; // Для таймера
+        let activeCardTimeout = null; 
 
         function switchTab(tab) {
             document.getElementById('home-view').style.display = 'none';
@@ -286,26 +313,20 @@
             } catch (error) { console.error(error); }
         }
 
-        // --- ЛОГІКА ТАЙМЕРА І ВІДОБРАЖЕННЯ ---
-        function activateCard(cardElement, itemData) {
-            // Якщо картка вже активна, клік по ній відкриває деталі
-            if (cardElement.classList.contains('is-active')) {
-                showDetails(itemData);
-                return;
-            }
-
-            // 1. Деактивуємо всі інші картки
+        // --- ЛОГІКА ДЛЯ ТЕЛЕФОНУ (ACTIVE CARD) ---
+        function activateCardMobile(cardElement) {
+            // Скидаємо активність з інших
             document.querySelectorAll('.anime-card').forEach(c => c.classList.remove('is-active'));
             if (activeCardTimeout) clearTimeout(activeCardTimeout);
 
-            // 2. Активуємо поточну
+            // Активуємо цю
             cardElement.classList.add('is-active');
             if(tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
 
-            // 3. Запускаємо таймер на 10 секунд
+            // Таймер 10 сек
             activeCardTimeout = setTimeout(() => {
                 cardElement.classList.remove('is-active');
-            }, 10000); // 10 секунд
+            }, 10000);
         }
 
         function renderGrid(items) {
@@ -352,14 +373,23 @@
                     </div>
                 `;
                 
-                // ВАЖЛИВО: Обробка дотику/мишки
-                card.addEventListener('touchstart', (e) => {
-                    // Якщо клік був не по кнопці (кнопки мають stopPropagation)
-                    activateCard(card, item);
-                });
+                // ВАЖЛИВА ЛОГІКА ВЗАЄМОДІЇ
                 
-                card.addEventListener('mouseenter', () => {
-                    activateCard(card, item);
+                // 1. Клік на ПК
+                card.addEventListener('click', (e) => {
+                    // Якщо ми на ПК (де є hover), клік відкриває сторінку
+                    // Ігноруємо якщо клік по кнопці (stopPropagation вже стоїть на кнопках)
+                    if (window.matchMedia('(hover: hover)').matches) {
+                        showDetails(item);
+                    }
+                });
+
+                // 2. Дотик на Телефоні
+                card.addEventListener('touchstart', (e) => {
+                    // Якщо клік не по кнопці
+                    if (!e.target.closest('button')) {
+                        activateCardMobile(card);
+                    }
                 });
 
                 container.appendChild(card);
