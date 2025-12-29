@@ -91,12 +91,17 @@
         
         .anime-card:active { transform: scale(0.97); border-color: var(--accent-color); }
 
-        /* ЕФЕКТ ПРИ НАВЕДЕННІ (ЗБЕРЕЖЕНО) */
+        /* 🔥 ОНОВЛЕНИЙ ЕФЕКТ ПРИ НАВЕДЕННІ (ПК) 🔥 */
         @media (hover: hover) {
             .anime-card:hover {
-                border-color: var(--accent-color);
-                box-shadow: 0 0 15px var(--accent-glow);
-                transform: translateY(-3px);
+                /* Змінюємо фіолетовий на темний сірий */
+                border-color: #444; /*cite: changed to dark gray based on user request*/
+                
+                /* Прибираємо фіолетове світіння і додаємо м'яку темну тінь для глибини */
+                box-shadow: 0 10px 25px rgba(0,0,0,0.8); /*cite: added dark shadow for depth/pop effect*/
+                
+                /* Посилюємо ефект спливання вперед (було -3px, стало -5px і трохи масштабування) */
+                transform: translateY(-5px) scale(1.02); /*cite: changed glow to pop-forward effect based on user request*/
             }
         }
 
