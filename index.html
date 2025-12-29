@@ -19,7 +19,7 @@
             --safe-bottom: env(safe-area-inset-bottom, 20px);
         }
 
-        /* --- АГРЕСИВНЕ ПРИХОВУВАННЯ СКРОЛБАРІВ --- */
+        /* --- СКРОЛБАРИ --- */
         *::-webkit-scrollbar { width: 0px !important; height: 0px !important; display: none !important; background: transparent !important; }
         html, body, * { scrollbar-width: none !important; -ms-overflow-style: none !important; }
         html, body { overflow-x: hidden; width: 100%; }
@@ -30,7 +30,7 @@
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             margin: 0; padding: 0;
             overscroll-behavior-y: none; 
-            -webkit-tap-highlight-color: transparent;
+            -webkit-tap-highlight-color: transparent; /* Глобальне вимкнення синього підсвічування */
         }
 
         /* --- ПОШУК --- */
@@ -62,20 +62,27 @@
 
         .anime-card {
             background-color: var(--card-bg); border-radius: 12px; overflow: hidden;
-            position: relative; box-shadow: 0 4px 8px rgba(0,0,0,0.6); border: 1px solid #222;
-            transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+            position: relative; 
+            box-shadow: 0 4px 8px rgba(0,0,0,0.6); 
+            border: 1px solid #222;
+            transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s; /* Пришвидшив анімацію для телефону */
             cursor: pointer;
+            
+            /* ВАЖЛИВО: Вимикаємо системне підсвічування саме для карток */
+            -webkit-tap-highlight-color: transparent !important;
+            user-select: none; -webkit-user-select: none;
         }
         
         /* 🔥 ЕФЕКТ НАТИСКАННЯ НА ТЕЛЕФОНІ (ACTIVE) 🔥 */
+        /* Використовуємо !important, щоб перебити будь-які інші стилі */
         .anime-card:active { 
-            transform: scale(0.97); 
-            /* Було фіолетовим, стало темно-сірим світінням */
-            border-color: #666; 
-            box-shadow: 0 0 20px rgba(150, 150, 150, 0.3);
+            transform: scale(0.96); 
+            border-color: #666 !important; 
+            box-shadow: 0 0 20px rgba(150, 150, 150, 0.2) !important;
+            background-color: #1a1a1a !important; /* Трохи світліший фон при натисканні */
         }
 
-        /* 🔥 ЕФЕКТ НАВЕДЕННЯ МИШКОЮ (HOVER) 🔥 */
+        /* ЕФЕКТ НАВЕДЕННЯ (ПК) */
         @media (hover: hover) {
             .anime-card:hover {
                 border-color: #666; 
@@ -103,10 +110,9 @@
             background: rgba(255, 255, 255, 0.08); color: white; border: 1px solid rgba(191, 0, 255, 0.2); 
             padding: 12px 0; border-radius: 8px; font-size: 14px; font-weight: 500; text-align: center; 
             cursor: pointer; touch-action: manipulation; transition: all 0.2s;
+            -webkit-tap-highlight-color: transparent;
         }
-        /* Теж міняємо на сірий при натисканні */
-        .episode-btn:active { background-color: #444; border-color: #666; transform: scale(0.95); box-shadow: 0 0 10px rgba(150,150,150,0.2); }
-        
+        .episode-btn:active { background-color: #444 !important; border-color: #666 !important; transform: scale(0.95); box-shadow: 0 0 10px rgba(150,150,150,0.2) !important; }
         @media (hover: hover) {
             .episode-btn:hover { background-color: #444; box-shadow: 0 0 10px rgba(150,150,150,0.2); border-color: #666; }
         }
@@ -119,10 +125,10 @@
         .user-id { color: var(--hint-color); font-size: 13px; margin-top: 4px; display: block; }
         
         .profile-menu { margin: 20px; background-color: var(--card-bg); border-radius: 16px; border: 1px solid #222; overflow: hidden; }
-        .menu-item { padding: 18px 20px; display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.05); cursor: pointer; transition: background 0.2s; font-size: 15px; }
+        .menu-item { padding: 18px 20px; display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.05); cursor: pointer; transition: background 0.2s; font-size: 15px; -webkit-tap-highlight-color: transparent; }
         .menu-item:last-child { border-bottom: none; }
-        .menu-item:active { background-color: rgba(191, 0, 255, 0.1); }
-        @media (hover: hover) { .menu-item:hover { background-color: rgba(191, 0, 255, 0.08); } }
+        .menu-item:active { background-color: rgba(255, 255, 255, 0.1) !important; }
+        @media (hover: hover) { .menu-item:hover { background-color: rgba(255, 255, 255, 0.05); } }
         .arrow { color: #555; font-weight: bold; }
 
         /* --- НИЖНЯ НАВІГАЦІЯ --- */
@@ -143,6 +149,7 @@
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             width: 50%; font-size: 11px; margin-top: 5px;
             cursor: pointer; transition: color 0.2s;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .nav-btn span:first-child { font-size: 22px; margin-bottom: 4px; }
@@ -152,7 +159,7 @@
 
         /* --- ПЛЕЄР --- */
         .player-modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: #000; z-index: 9999; flex-direction: column; justify-content: center; align-items: center; }
-        .close-player-btn { position: absolute; top: max(20px, var(--safe-top)); right: 20px; color: white; background: rgba(50, 50, 50, 0.5); backdrop-filter: blur(4px); border: none; border-radius: 50%; width: 44px; height: 44px; font-size: 28px; line-height: 1; display: flex; align-items: center; justify-content: center; z-index: 10000; cursor: pointer; transition: background 0.2s; }
+        .close-player-btn { position: absolute; top: max(20px, var(--safe-top)); right: 20px; color: white; background: rgba(50, 50, 50, 0.5); backdrop-filter: blur(4px); border: none; border-radius: 50%; width: 44px; height: 44px; font-size: 28px; line-height: 1; display: flex; align-items: center; justify-content: center; z-index: 10000; cursor: pointer; transition: background 0.2s; -webkit-tap-highlight-color: transparent; }
         .close-player-btn:hover { background: rgba(255, 255, 255, 0.2); }
         video { width: 100%; max-height: 100vh; outline: none; }
     </style>
@@ -204,7 +211,7 @@
         </div>
         
         <div style="padding: 30px; text-align: center; color: #444; font-size: 12px;">
-            Anime App Mobile v1.6
+            Anime App Mobile v1.7
         </div>
     </div>
 
