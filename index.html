@@ -7,14 +7,12 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         :root {
-            /* --- ТЕМА: BLACK & PURPLE --- */
             --bg-color: #000000;
             --text-color: #ffffff;
             --card-bg: #121212;
             --hint-color: #b0b0b0;
             --accent-color: #bf00ff;
             --accent-glow: rgba(191, 0, 255, 0.4);
-            
             --safe-top: env(safe-area-inset-top, 0px);
             --safe-bottom: env(safe-area-inset-bottom, 20px);
         }
@@ -60,44 +58,92 @@
             box-sizing: border-box;
         }
 
+        /* --- КАРТКА АНІМЕ (NETFLIX STYLE) --- */
         .anime-card {
-            background-color: var(--card-bg); border-radius: 12px; overflow: hidden;
+            background-color: var(--card-bg); border-radius: 8px; 
             position: relative; 
             box-shadow: 0 4px 8px rgba(0,0,0,0.6); 
             border: 1px solid #222;
-            
-            /* ЗМІНА: Більш повільна і плавна анімація (0.3s cubic-bezier) */
             transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-            
             cursor: pointer;
             -webkit-tap-highlight-color: transparent !important;
-            user-select: none; -webkit-user-select: none;
-        }
-        
-        /* 🔥 ЕФЕКТ НАТИСКАННЯ НА ТЕЛЕФОНІ 🔥 */
-        .anime-card:active { 
-            transform: scale(0.95); /* Трохи глибше натискання */
-            border-color: #999 !important; 
-            background-color: #222 !important;
-            box-shadow: 0 0 50px rgba(180, 180, 180, 0.5) !important;
-            transition-duration: 0.1s; /* Натискання відбувається швидко */
+            user-select: none;
+            /* Важливо: прибираємо overflow:hidden, щоб контент міг виходити за межі при наведенні */
+            overflow: visible; 
+            z-index: 1;
         }
 
+        .poster-wrapper {
+            width: 100%; padding-top: 145%; position: relative; 
+            border-radius: 8px; overflow: hidden; /* Закруглення картинки */
+            background-color: #050505;
+        }
+        
+        .poster-image { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
+        
+        .info { padding: 10px; position: relative; background: var(--card-bg); border-radius: 0 0 8px 8px; }
+        .title { font-size: 13px; font-weight: 600; line-height: 1.4; color: #eee; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden;}
+
+        /* --- ПРИХОВАНИЙ БЛОК (HOVER INFO) --- */
+        .hover-info {
+            display: none; /* Сховано за замовчуванням */
+            position: absolute;
+            top: 100%; left: 0; right: 0; /* З'являється знизу картки */
+            background-color: var(--card-bg);
+            padding: 10px;
+            border-radius: 0 0 8px 8px;
+            border: 1px solid #333;
+            border-top: none;
+            box-shadow: 0 15px 20px rgba(0,0,0,0.8);
+            z-index: 10;
+        }
+
+        .meta-row { display: flex; gap: 8px; font-size: 10px; color: #aaa; margin-bottom: 8px; align-items: center; }
+        .meta-tag { border: 1px solid #555; padding: 1px 4px; border-radius: 3px; }
+        .match-text { color: #46d369; font-weight: bold; } /* Зелений "Match" як у Netflix */
+
+        .action-buttons { display: flex; gap: 8px; margin-top: 5px; }
+        
+        .btn-mini {
+            flex: 1; border: none; border-radius: 4px; height: 32px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 16px; cursor: pointer; transition: 0.2s;
+        }
+        .btn-play { background: white; color: black; }
+        .btn-play:hover { background: #ddd; }
+        
+        .btn-queue { background: rgba(255,255,255,0.1); color: white; border: 1px solid #555; }
+        .btn-queue:hover { border-color: white; }
+        .btn-queue.in-queue { color: var(--accent-color); border-color: var(--accent-color); }
+
+        /* --- ЕФЕКТИ НАВЕДЕННЯ (ТІЛЬКИ ПК) --- */
         @media (hover: hover) {
             .anime-card:hover {
-                border-color: #666; 
-                box-shadow: 0 0 25px rgba(150, 150, 150, 0.3); 
-                transform: translateY(-5px) scale(1.02);
+                transform: scale(1.15) translateY(-10px);
+                z-index: 100;
+                box-shadow: 0 0 30px rgba(0,0,0,0.9);
+                border-color: #555;
+            }
+            .anime-card:hover .poster-wrapper {
+                border-radius: 8px 8px 0 0; /* Випрямляємо нижні кути */
+            }
+            .anime-card:hover .info {
+                display: none; /* Ховаємо стару назву */
+            }
+            .anime-card:hover .hover-info {
+                display: block; /* Показуємо розширену інфу */
+                animation: fadeIn 0.3s;
             }
         }
 
-        .poster-wrapper { width: 100%; padding-top: 145%; position: relative; background-color: #050505; }
-        .poster-image { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
-        .info { padding: 10px; }
-        .title { font-size: 13px; font-weight: 600; line-height: 1.4; color: #eee; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* --- ДЕТАЛІ --- */
-        #details-view { display: none; background-color: var(--bg-color); min-height: 100vh; padding-bottom: 90px; }
+        /* На мобільному просто натискання */
+        .anime-card:active { transform: scale(0.96); }
+
+
+        /* --- ІНШІ СТИЛІ --- */
+        #details-view, #profile-view { display: none; background-color: var(--bg-color); min-height: 100vh; padding-bottom: 90px; }
         .details-header { position: relative; width: 100%; height: 40vh; }
         .backdrop-image { width: 100%; height: 100%; object-fit: cover; mask-image: linear-gradient(to bottom, black 20%, transparent 100%); -webkit-mask-image: linear-gradient(to bottom, black 20%, transparent 100%); }
         .details-content { padding: 0 20px; margin-top: -60px; position: relative; z-index: 2; padding-bottom: calc(50px + var(--safe-bottom)); }
@@ -109,25 +155,28 @@
         .episode-btn { 
             background: rgba(255, 255, 255, 0.08); color: white; border: 1px solid rgba(191, 0, 255, 0.2); 
             padding: 12px 0; border-radius: 8px; font-size: 14px; font-weight: 500; text-align: center; 
-            cursor: pointer; touch-action: manipulation; 
-            transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
-            -webkit-tap-highlight-color: transparent;
+            cursor: pointer; -webkit-tap-highlight-color: transparent;
         }
-        .episode-btn:active { background-color: #444 !important; border-color: #888 !important; transform: scale(0.92); box-shadow: 0 0 20px rgba(180,180,180,0.4) !important; transition-duration: 0.1s; }
-        @media (hover: hover) { .episode-btn:hover { background-color: #444; box-shadow: 0 0 10px rgba(150,150,150,0.2); border-color: #666; } }
+        .episode-btn:active { background-color: var(--accent-color); }
+
+        .fav-btn {
+            position: absolute; bottom: -25px; right: 20px;
+            width: 55px; height: 55px; border-radius: 50%;
+            background-color: #1a1a1a;
+            border: 2px solid var(--accent-color);
+            color: var(--accent-color);
+            font-size: 24px; cursor: pointer;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.6);
+            z-index: 10; display: flex; align-items: center; justify-content: center;
+        }
+        .fav-btn.active { background-color: var(--accent-color); color: white; }
 
         /* --- ПРОФІЛЬ --- */
-        #profile-view { display: none; padding-bottom: 100px; }
         .profile-header { padding: 40px 20px; background: linear-gradient(180deg, rgba(191,0,255,0.15) 0%, transparent 100%); display: flex; align-items: center; gap: 20px; }
         .avatar-circle { width: 70px; height: 70px; background: #1a1a1a; border-radius: 50%; border: 2px solid var(--accent-color); display: flex; align-items: center; justify-content: center; font-size: 28px; color: #fff; box-shadow: 0 0 20px rgba(191, 0, 255, 0.2); }
-        .profile-info h2 { margin: 0; font-size: 22px; color: white; }
-        .user-id { color: var(--hint-color); font-size: 13px; margin-top: 4px; display: block; }
-        
         .profile-menu { margin: 20px; background-color: var(--card-bg); border-radius: 16px; border: 1px solid #222; overflow: hidden; }
-        .menu-item { padding: 18px 20px; display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.05); cursor: pointer; transition: background 0.2s; font-size: 15px; -webkit-tap-highlight-color: transparent; }
-        .menu-item:last-child { border-bottom: none; }
-        .menu-item:active { background-color: rgba(255, 255, 255, 0.1) !important; }
-        @media (hover: hover) { .menu-item:hover { background-color: rgba(255, 255, 255, 0.05); } }
+        .menu-item { padding: 18px 20px; display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.05); cursor: pointer; }
+        .menu-item:active { background-color: rgba(255, 255, 255, 0.1); }
         .arrow { color: #555; font-weight: bold; }
 
         /* --- НИЖНЯ НАВІГАЦІЯ --- */
@@ -141,25 +190,17 @@
             padding-bottom: var(--safe-bottom);
             z-index: 90;
         }
-
         .nav-btn {
-            background: none; border: none;
-            color: #666;
+            background: none; border: none; color: #666;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            width: 50%; font-size: 11px; margin-top: 5px;
-            cursor: pointer; transition: color 0.2s;
-            -webkit-tap-highlight-color: transparent;
+            width: 50%; font-size: 11px; margin-top: 5px; cursor: pointer;
         }
-
         .nav-btn span:first-child { font-size: 22px; margin-bottom: 4px; }
         .nav-btn.active { color: var(--accent-color); }
-        .nav-btn.active span:first-child { text-shadow: 0 0 10px rgba(191,0,255,0.4); }
-        @media (hover: hover) { .nav-btn:hover { color: #fff; } .nav-btn.active:hover { color: var(--accent-color); } }
 
         /* --- ПЛЕЄР --- */
         .player-modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: #000; z-index: 9999; flex-direction: column; justify-content: center; align-items: center; }
-        .close-player-btn { position: absolute; top: max(20px, var(--safe-top)); right: 20px; color: white; background: rgba(50, 50, 50, 0.5); backdrop-filter: blur(4px); border: none; border-radius: 50%; width: 44px; height: 44px; font-size: 28px; line-height: 1; display: flex; align-items: center; justify-content: center; z-index: 10000; cursor: pointer; transition: background 0.2s; -webkit-tap-highlight-color: transparent; }
-        .close-player-btn:hover { background: rgba(255, 255, 255, 0.2); }
+        .close-player-btn { position: absolute; top: max(20px, var(--safe-top)); right: 20px; color: white; background: rgba(50, 50, 50, 0.5); backdrop-filter: blur(4px); border: none; border-radius: 50%; width: 44px; height: 44px; font-size: 28px; line-height: 1; display: flex; align-items: center; justify-content: center; z-index: 10000; cursor: pointer; }
         video { width: 100%; max-height: 100vh; outline: none; }
     </style>
 </head>
@@ -175,11 +216,11 @@
     <div id="details-view">
         <div class="details-header">
             <img id="detail-poster" src="" class="backdrop-image">
+            <button id="fav-btn" class="fav-btn" onclick="toggleFavorite()">🤍</button>
         </div>
         <div class="details-content">
             <div id="detail-title" class="details-title">Завантаження...</div>
             <div id="detail-desc" class="details-desc"></div>
-
             <div class="section-title">Епізоди</div>
             <div id="episodes-list" class="episodes-grid"></div>
         </div>
@@ -195,61 +236,48 @@
         </div>
 
         <div class="profile-menu">
-            <div class="menu-item">
+            <div class="menu-item" onclick="showFavorites()">
                 <span>❤️ Моє улюблене</span>
                 <span class="arrow">›</span>
             </div>
-            <div class="menu-item">
-                <span>🕒 Історія перегляду</span>
+            
+            <div class="menu-item" onclick="showQueue()">
+                <span>➕ Список перегляду (Черга)</span>
                 <span class="arrow">›</span>
             </div>
+
             <div class="menu-item" style="border:none;">
                 <span>⚙️ Налаштування</span>
                 <span class="arrow">›</span>
             </div>
         </div>
-        
-        <div style="padding: 30px; text-align: center; color: #444; font-size: 12px;">
-            Anime App Mobile v1.9 (Smooth Touch)
-        </div>
+        <div style="padding: 30px; text-align: center; color: #444; font-size: 12px;">Anime App Mobile v2.1</div>
     </div>
 
     <div class="bottom-nav">
-        <button class="nav-btn active" onclick="switchTab('home')" id="btn-home">
-            <span>🏠</span>
-            <span>Головна</span>
-        </button>
-        <button class="nav-btn" onclick="switchTab('profile')" id="btn-profile">
-            <span>👤</span>
-            <span>Профіль</span>
-        </button>
+        <button class="nav-btn active" onclick="switchTab('home')" id="btn-home"><span>🏠</span><span>Головна</span></button>
+        <button class="nav-btn" onclick="switchTab('profile')" id="btn-profile"><span>👤</span><span>Профіль</span></button>
     </div>
 
     <div id="player-modal" class="player-modal">
         <button class="close-player-btn" onclick="closePlayer()">×</button>
-        <video id="main-player" controls playsinline>
-            <source src="" type="video/mp4">
-        </video>
+        <video id="main-player" controls playsinline><source src="" type="video/mp4"></video>
     </div>
 
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand(); 
-        
         if (tg.setHeaderColor) tg.setHeaderColor('#000000');
         if (tg.setBackgroundColor) tg.setBackgroundColor('#000000');
-
-        tg.BackButton.onClick(() => {
-            showHome();
-        });
+        tg.BackButton.onClick(() => { showHome(); });
 
         let allAnimeData = []; 
+        let currentAnimeId = null;
 
         function switchTab(tab) {
             document.getElementById('home-view').style.display = 'none';
             document.getElementById('details-view').style.display = 'none';
             document.getElementById('profile-view').style.display = 'none';
-
             document.getElementById('btn-home').className = 'nav-btn';
             document.getElementById('btn-profile').className = 'nav-btn';
 
@@ -257,6 +285,11 @@
                 document.getElementById('home-view').style.display = 'block';
                 document.getElementById('btn-home').className = 'nav-btn active';
                 tg.BackButton.hide();
+                // Скидаємо фільтр якщо був
+                if(document.getElementById('search-input').value.includes("❤️") || document.getElementById('search-input').value.includes("➕")) {
+                     document.getElementById('search-input').value = "";
+                     renderGrid(allAnimeData);
+                }
             } else if (tab === 'profile') {
                 document.getElementById('profile-view').style.display = 'block';
                 document.getElementById('btn-profile').className = 'nav-btn active';
@@ -265,19 +298,14 @@
             }
         }
 
-        function showHome() {
-            switchTab('home');
-        }
+        function showHome() { switchTab('home'); }
 
         function loadProfileData() {
             const user = tg.initDataUnsafe.user;
             if (user) {
-                document.getElementById('user-name').innerText = user.first_name + (user.last_name ? " " + user.last_name : "");
+                document.getElementById('user-name').innerText = user.first_name;
                 document.getElementById('user-id').innerText = "ID: " + user.id;
                 if (user.first_name) document.getElementById('user-avatar').innerText = user.first_name[0].toUpperCase();
-            } else {
-                document.getElementById('user-name').innerText = "Гість";
-                document.getElementById('user-id').innerText = "Відкрийте через Telegram";
             }
         }
 
@@ -287,18 +315,21 @@
                 const data = await response.json();
                 allAnimeData = data.reverse();
                 renderGrid(allAnimeData);
-            } catch (error) {
-                console.error("Error loading anime:", error);
-            }
+            } catch (error) { console.error("Error:", error); }
         }
 
+        // --- ГЕНЕРАЦІЯ СІТКИ З КНОПКАМИ ---
         function renderGrid(items) {
             const container = document.getElementById('anime-grid');
             container.innerHTML = '';
+            const queue = JSON.parse(localStorage.getItem('myQueue')) || [];
 
             items.forEach(item => {
+                const inQueue = queue.includes(item.id);
                 const card = document.createElement('div');
                 card.className = 'anime-card';
+                
+                // HTML картки з прихованим блоком hover-info
                 card.innerHTML = `
                     <div class="poster-wrapper">
                         <img src="${item.poster}" class="poster-image" loading="lazy">
@@ -306,51 +337,124 @@
                     <div class="info">
                         <div class="title">${item.title}</div>
                     </div>
+                    
+                    <div class="hover-info">
+                        <div class="title" style="margin-bottom:5px; font-size:14px;">${item.title}</div>
+                        <div class="meta-row">
+                            <span class="match-text">98% Match</span>
+                            <span class="meta-tag">16+</span>
+                            <span>2024</span>
+                        </div>
+                        <div class="action-buttons">
+                            <button class="btn-mini btn-play" onclick="event.stopPropagation(); showDetailsById(${item.id})">
+                                ▶
+                            </button>
+                            <button class="btn-mini btn-queue ${inQueue ? 'in-queue' : ''}" onclick="event.stopPropagation(); toggleQueue(${item.id}, this)">
+                                ${inQueue ? '✓' : '➕'}
+                            </button>
+                        </div>
+                        <div style="font-size:10px; color:#777; margin-top:5px;">
+                            ${item.description ? item.description.substring(0, 40) + '...' : 'Опис...'}
+                        </div>
+                    </div>
                 `;
                 
-                // ВАЖЛИВА ЗМІНА: Додано затримку (setTimeout), щоб було видно анімацію
+                // Натискання на всю картку (для мобільного і ПК)
                 card.onclick = () => {
-                    if(tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
-                    
-                    // Затримка 200 мілісекунд перед переходом
-                    setTimeout(() => {
-                        showDetails(item);
-                    }, 200);
+                    setTimeout(() => { showDetails(item); }, 200);
                 };
                 container.appendChild(card);
             });
         }
 
+        // Допоміжна функція для кнопок
+        function showDetailsById(id) {
+            const item = allAnimeData.find(i => i.id === id);
+            if(item) showDetails(item);
+        }
+
+        // --- ЛОГІКА ЧЕРГИ (QUEUE) ---
+        function toggleQueue(id, btnElement) {
+            let queue = JSON.parse(localStorage.getItem('myQueue')) || [];
+            const index = queue.indexOf(id);
+            
+            if (index === -1) {
+                queue.push(id);
+                btnElement.innerHTML = '✓';
+                btnElement.classList.add('in-queue');
+                if(tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+            } else {
+                queue.splice(index, 1);
+                btnElement.innerHTML = '➕';
+                btnElement.classList.remove('in-queue');
+                if(tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+            }
+            localStorage.setItem('myQueue', JSON.stringify(queue));
+        }
+
+        function showQueue() {
+            let queue = JSON.parse(localStorage.getItem('myQueue')) || [];
+            const queueList = allAnimeData.filter(anime => queue.includes(anime.id));
+            switchTab('home'); 
+            document.getElementById('search-input').value = "➕ Список перегляду";
+            renderGrid(queueList);
+        }
+        
+        // --- ЛОГІКА УЛЮБЛЕНОГО ---
+        function toggleFavorite() {
+            if (!currentAnimeId) return;
+            let favorites = JSON.parse(localStorage.getItem('myFavorites')) || [];
+            const index = favorites.indexOf(currentAnimeId);
+
+            if (index === -1) {
+                favorites.push(currentAnimeId);
+            } else {
+                favorites.splice(index, 1);
+            }
+            localStorage.setItem('myFavorites', JSON.stringify(favorites));
+            updateFavButton();
+        }
+
+        function updateFavButton() {
+            const btn = document.getElementById('fav-btn');
+            let favorites = JSON.parse(localStorage.getItem('myFavorites')) || [];
+            if (favorites.includes(currentAnimeId)) {
+                btn.innerHTML = '❤️'; btn.classList.add('active');
+            } else {
+                btn.innerHTML = '🤍'; btn.classList.remove('active');
+            }
+        }
+
+        function showFavorites() {
+            let favorites = JSON.parse(localStorage.getItem('myFavorites')) || [];
+            const favAnimeList = allAnimeData.filter(anime => favorites.includes(anime.id));
+            switchTab('home'); 
+            document.getElementById('search-input').value = "❤️ Моє улюблене";
+            renderGrid(favAnimeList);
+        }
+
         function showDetails(anime) {
+            currentAnimeId = anime.id;
             document.getElementById('home-view').style.display = 'none';
             document.getElementById('profile-view').style.display = 'none';
             document.getElementById('details-view').style.display = 'block';
 
             document.getElementById('detail-poster').src = anime.poster;
             document.getElementById('detail-title').innerText = anime.title;
-            document.getElementById('detail-desc').innerText = anime.description || "Опис відсутній...";
+            document.getElementById('detail-desc').innerText = anime.description || "";
+            updateFavButton();
 
             const epList = document.getElementById('episodes-list');
             epList.innerHTML = ''; 
-
-            if (anime.episodes && anime.episodes.length > 0) {
+            if (anime.episodes) {
                 anime.episodes.forEach(ep => {
                     const btn = document.createElement('button');
                     btn.className = 'episode-btn';
                     btn.innerText = ep.name;
-                    btn.onclick = () => {
-                        if(tg.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
-                        // Теж додаємо затримку для кнопок епізодів
-                        setTimeout(() => {
-                            openPlayer(ep.url);
-                        }, 150);
-                    };
+                    btn.onclick = () => { setTimeout(() => { openPlayer(ep.url); }, 150); };
                     epList.appendChild(btn);
                 });
-            } else {
-                epList.innerHTML = '<div style="color:#777; grid-column: 1/-1; text-align:center;">Серії ще не додані</div>';
             }
-
             tg.BackButton.show();
             window.scrollTo(0, 0);
         }
@@ -363,7 +467,6 @@
 
         const modal = document.getElementById('player-modal');
         const videoEl = document.getElementById('main-player');
-
         function openPlayer(url) {
             modal.style.display = 'flex';
             videoEl.src = url;
@@ -371,11 +474,8 @@
             if (videoEl.requestFullscreen) videoEl.requestFullscreen();
             else if (videoEl.webkitEnterFullScreen) videoEl.webkitEnterFullScreen();
         }
-
         function closePlayer() {
-            modal.style.display = 'none';
-            videoEl.pause();
-            videoEl.src = "";
+            modal.style.display = 'none'; videoEl.pause(); videoEl.src = "";
         }
 
         loadAnime();
