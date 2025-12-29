@@ -12,9 +12,10 @@
             --card-bg: #121212;
             --hint-color: #b0b0b0;
             --accent-color: #bf00ff;
-            --overlay-bg: rgba(0, 0, 0, 0.7);
-            /* Більш прозорий і темний колір кнопок */
-            --btn-bg: rgba(20, 20, 20, 0.75); 
+            /* Напівпрозорий фон для оверлею */
+            --overlay-bg: rgba(0, 0, 0, 0.75); 
+            /* Фон кнопок: дуже прозорий білий, без рамок */
+            --btn-glass: rgba(255, 255, 255, 0.12);
             --safe-top: env(safe-area-inset-top, 0px);
             --safe-bottom: env(safe-area-inset-bottom, 20px);
         }
@@ -33,7 +34,7 @@
         /* --- ПОШУК --- */
         .search-container {
             position: sticky; top: 0; z-index: 100;
-            background-color: rgba(5, 5, 5, 0.9);
+            background-color: rgba(5, 5, 5, 0.95);
             backdrop-filter: blur(20px);
             padding: calc(10px + var(--safe-top)) 15px 10px;
             border-bottom: 1px solid #222;
@@ -56,10 +57,10 @@
 
         /* --- КАРТКА --- */
         .anime-card {
-            background-color: var(--card-bg); border-radius: 14px; 
+            background-color: var(--card-bg); border-radius: 12px; 
             position: relative; 
             overflow: hidden; 
-            box-shadow: 0 4px 8px rgba(0,0,0,0.6); 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5); 
             border: 1px solid #222;
             cursor: pointer;
             aspect-ratio: 2 / 3; 
@@ -73,14 +74,14 @@
         }
 
         .default-gradient {
-            position: absolute; bottom: 0; left: 0; width: 100%; height: 60%;
+            position: absolute; bottom: 0; left: 0; width: 100%; height: 70%;
             background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, transparent 100%);
             z-index: 1; transition: opacity 0.2s;
         }
         
         .default-title-bar {
             position: absolute; bottom: 15px; left: 0; width: 100%;
-            text-align: center; padding: 0 8px; z-index: 2;
+            text-align: center; padding: 0 10px; z-index: 2;
             transition: opacity 0.2s;
         }
         .default-title-text {
@@ -93,7 +94,7 @@
         .overlay-info {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: var(--overlay-bg);
-            backdrop-filter: blur(6px); /* Більше розмиття */
+            backdrop-filter: blur(8px); /* Сильне розмиття фону */
             z-index: 5;
             display: flex; flex-direction: column; justify-content: space-between;
             padding: 12px;
@@ -102,63 +103,65 @@
 
         .badge-container { display: flex; justify-content: center; margin-top: 5px; }
         .episode-badge {
-            background: rgba(30, 30, 30, 0.8);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 5px 14px; border-radius: 20px;
-            font-size: 11px; font-weight: 600; color: #ddd;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 4px 10px; border-radius: 6px;
+            font-size: 10px; font-weight: 600; color: #ddd;
+            letter-spacing: 0.5px;
         }
 
-        .info-center { text-align: center; display: flex; flex-direction: column; gap: 4px; margin-bottom: 5px; }
+        .info-center { text-align: center; display: flex; flex-direction: column; gap: 4px; margin-bottom: 10px; }
         .info-title { 
-            font-size: 15px; font-weight: 800; color: white; line-height: 1.2; 
-            text-shadow: 0 2px 5px black;
+            font-size: 14px; font-weight: 800; color: white; line-height: 1.3; 
         }
-        .info-meta { font-size: 11px; color: #ccc; font-weight: 500; }
+        .info-meta { font-size: 10px; color: #aaa; font-weight: 500; }
 
-        /* --- ОНОВЛЕНІ КНОПКИ --- */
+        /* --- ОНОВЛЕНІ КНОПКИ (CLEAN & SUBTLE) --- */
         .buttons-row {
             display: flex; gap: 8px; width: 100%;
             align-items: center; justify-content: center;
         }
 
-        .btn-premium {
-            background-color: var(--btn-bg);
-            /* Тонка, ледь помітна обводка */
-            border: 1px solid rgba(255,255,255,0.15);
-            border-radius: 12px;
-            color: #fff; height: 42px;
+        .btn-clean {
+            background-color: var(--btn-glass); /* Прозорий фон */
+            border: none; /* Жодних рамок */
+            border-radius: 8px; /* Акуратні кути */
+            color: #fff; height: 38px;
             display: flex; align-items: center; justify-content: center;
             cursor: pointer; transition: 0.2s;
-            /* Тінь, щоб відділити від фону */
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
         }
-        .btn-premium:active { transform: scale(0.96); background-color: rgba(60,60,60,0.9); }
+        
+        /* При натисканні стає трохи світлішим */
+        .btn-clean:active { background-color: rgba(255, 255, 255, 0.25); transform: scale(0.97); }
+        /* Ховер на ПК */
+        @media(hover: hover) {
+            .btn-clean:hover { background-color: rgba(255, 255, 255, 0.2); }
+        }
 
         .btn-play {
             flex-grow: 1; 
-            font-size: 13px; font-weight: 700; gap: 8px;
-            letter-spacing: 0.3px; /* Трохи розрядив літери */
+            font-size: 13px; font-weight: 600; gap: 6px;
         }
-        .btn-play svg { fill: white; width: 12px; height: 12px; } /* Трохи менша іконка для охайності */
+        .btn-play svg { fill: white; width: 12px; height: 12px; }
 
         .btn-list {
-            width: 42px; flex-shrink: 0;
+            width: 38px; flex-shrink: 0;
         }
-        .btn-list svg { fill: white; width: 18px; height: 18px; }
+        .btn-list svg { fill: white; width: 16px; height: 16px; }
         
+        /* Активна кнопка (в списку) - акцент */
         .btn-list.in-queue { 
-            border-color: var(--accent-color); 
-            background: rgba(191,0,255,0.15); 
+            background: rgba(191,0,255,0.2); /* Легкий фіолетовий тінт */
+            color: var(--accent-color);
         }
         .btn-list.in-queue svg { fill: var(--accent-color); }
 
 
-        /* --- EFEKTY --- */
+        /* --- ЕФЕКТИ --- */
         @media (hover: hover) {
             .anime-card:hover {
                 transform: scale(1.05);
                 box-shadow: 0 10px 30px rgba(0,0,0,0.8);
-                border-color: #555;
+                border-color: #333;
                 z-index: 10;
             }
             .anime-card:hover .overlay-info { opacity: 1; }
@@ -331,10 +334,10 @@
                         </div>
 
                         <div class="buttons-row">
-                            <button class="btn-premium btn-play" onclick="event.stopPropagation(); showDetailsById(${item.id})">
+                            <button class="btn-clean btn-play" onclick="event.stopPropagation(); showDetailsById(${item.id})">
                                 ${playIcon} Дивитися
                             </button>
-                            <button class="btn-premium btn-list ${inQueue ? 'in-queue' : ''}" onclick="event.stopPropagation(); toggleQueue(${item.id}, this)">
+                            <button class="btn-clean btn-list ${inQueue ? 'in-queue' : ''}" onclick="event.stopPropagation(); toggleQueue(${item.id}, this)">
                                 ${inQueue ? checkIcon : addIcon}
                             </button>
                         </div>
