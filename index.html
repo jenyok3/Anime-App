@@ -19,21 +19,10 @@
             --safe-bottom: env(safe-area-inset-bottom, 20px);
         }
 
-        /* --- 🔥 АГРЕСИВНЕ ПРИХОВУВАННЯ СКРОЛБАРІВ 🔥 --- */
-        *::-webkit-scrollbar {
-            width: 0px !important;
-            height: 0px !important;
-            display: none !important;
-            background: transparent !important;
-        }
-        html, body, * {
-            scrollbar-width: none !important;
-            -ms-overflow-style: none !important;
-        }
-        html, body {
-            overflow-x: hidden;
-            width: 100%;
-        }
+        /* --- АГРЕСИВНЕ ПРИХОВУВАННЯ СКРОЛБАРІВ --- */
+        *::-webkit-scrollbar { width: 0px !important; height: 0px !important; display: none !important; background: transparent !important; }
+        html, body, * { scrollbar-width: none !important; -ms-overflow-style: none !important; }
+        html, body { overflow-x: hidden; width: 100%; }
 
         body {
             background-color: var(--bg-color);
@@ -59,8 +48,7 @@
             border-radius: 12px; border: 1px solid #333;
             background-color: #1a1a1a; color: white;
             font-size: 16px; outline: none; appearance: none; box-shadow: none;
-            box-sizing: border-box; 
-            transition: all 0.3s ease;
+            box-sizing: border-box; transition: all 0.3s ease;
         }
         #search-input:focus { border-color: var(--accent-color); box-shadow: 0 0 15px var(--accent-glow); }
 
@@ -79,18 +67,19 @@
             cursor: pointer;
         }
         
-        .anime-card:active { transform: scale(0.97); border-color: var(--accent-color); }
+        /* 🔥 ЕФЕКТ НАТИСКАННЯ НА ТЕЛЕФОНІ (ACTIVE) 🔥 */
+        .anime-card:active { 
+            transform: scale(0.97); 
+            /* Було фіолетовим, стало темно-сірим світінням */
+            border-color: #666; 
+            box-shadow: 0 0 20px rgba(150, 150, 150, 0.3);
+        }
 
-        /* 🔥 ОНОВЛЕНИЙ ЕФЕКТ ПРИ НАВЕДЕННІ (СІРЕ СВІТІННЯ) 🔥 */
+        /* 🔥 ЕФЕКТ НАВЕДЕННЯ МИШКОЮ (HOVER) 🔥 */
         @media (hover: hover) {
             .anime-card:hover {
-                /* Рамка стає трохи світлішою */
-                border-color: #555; 
-                
-                /* Світіння: розмите, сірий колір (RGBA 120,120,120) */
-                box-shadow: 0 0 20px rgba(120, 120, 120, 0.4); 
-                
-                /* Ефект спливання вперед */
+                border-color: #666; 
+                box-shadow: 0 0 25px rgba(150, 150, 150, 0.3); 
                 transform: translateY(-5px) scale(1.02);
             }
         }
@@ -115,14 +104,11 @@
             padding: 12px 0; border-radius: 8px; font-size: 14px; font-weight: 500; text-align: center; 
             cursor: pointer; touch-action: manipulation; transition: all 0.2s;
         }
-        .episode-btn:active { background-color: var(--accent-color); border-color: var(--accent-color); transform: scale(0.95); }
+        /* Теж міняємо на сірий при натисканні */
+        .episode-btn:active { background-color: #444; border-color: #666; transform: scale(0.95); box-shadow: 0 0 10px rgba(150,150,150,0.2); }
         
         @media (hover: hover) {
-            .episode-btn:hover {
-                background-color: var(--accent-color);
-                box-shadow: 0 0 10px var(--accent-glow);
-                border-color: var(--accent-color);
-            }
+            .episode-btn:hover { background-color: #444; box-shadow: 0 0 10px rgba(150,150,150,0.2); border-color: #666; }
         }
 
         /* --- ПРОФІЛЬ --- */
@@ -136,11 +122,7 @@
         .menu-item { padding: 18px 20px; display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.05); cursor: pointer; transition: background 0.2s; font-size: 15px; }
         .menu-item:last-child { border-bottom: none; }
         .menu-item:active { background-color: rgba(191, 0, 255, 0.1); }
-        
-        @media (hover: hover) {
-            .menu-item:hover { background-color: rgba(191, 0, 255, 0.08); }
-        }
-        
+        @media (hover: hover) { .menu-item:hover { background-color: rgba(191, 0, 255, 0.08); } }
         .arrow { color: #555; font-weight: bold; }
 
         /* --- НИЖНЯ НАВІГАЦІЯ --- */
@@ -166,11 +148,7 @@
         .nav-btn span:first-child { font-size: 22px; margin-bottom: 4px; }
         .nav-btn.active { color: var(--accent-color); }
         .nav-btn.active span:first-child { text-shadow: 0 0 10px rgba(191,0,255,0.4); }
-        
-        @media (hover: hover) {
-            .nav-btn:hover { color: #fff; }
-            .nav-btn.active:hover { color: var(--accent-color); }
-        }
+        @media (hover: hover) { .nav-btn:hover { color: #fff; } .nav-btn.active:hover { color: var(--accent-color); } }
 
         /* --- ПЛЕЄР --- */
         .player-modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: #000; z-index: 9999; flex-direction: column; justify-content: center; align-items: center; }
@@ -226,7 +204,7 @@
         </div>
         
         <div style="padding: 30px; text-align: center; color: #444; font-size: 12px;">
-            Anime App Mobile v1.5
+            Anime App Mobile v1.6
         </div>
     </div>
 
