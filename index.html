@@ -15,9 +15,26 @@
             --accent-color: #bf00ff;
             --accent-glow: rgba(191, 0, 255, 0.4);
             
-            /* Безпечні зони для телефонів */
             --safe-top: env(safe-area-inset-top, 0px);
             --safe-bottom: env(safe-area-inset-bottom, 20px);
+        }
+
+        /* --- ПРИХОВУВАННЯ СКРОЛБАРІВ (ПОВЗУНКІВ) --- */
+        /* Для Chrome, Safari, Telegram Desktop */
+        ::-webkit-scrollbar {
+            display: none; /* Повністю ховає смугу */
+            width: 0px;
+            background: transparent;
+        }
+
+        /* Для Firefox та інших */
+        html, body {
+            scrollbar-width: none; /* Ховає смугу */
+            -ms-overflow-style: none; /* Для IE/Edge */
+            
+            /* Блокуємо горизонтальну прокрутку */
+            overflow-x: hidden; 
+            width: 100%;
         }
 
         body {
@@ -44,6 +61,7 @@
             border-radius: 12px; border: 1px solid #333;
             background-color: #1a1a1a; color: white;
             font-size: 16px; outline: none; appearance: none; box-shadow: none;
+            box-sizing: border-box; /* Важливо для запобігання вилізання за межі */
             transition: all 0.3s ease;
         }
         #search-input:focus { border-color: var(--accent-color); box-shadow: 0 0 15px var(--accent-glow); }
@@ -53,6 +71,7 @@
             display: grid; grid-template-columns: repeat(2, 1fr);
             gap: 12px; padding: 15px;
             padding-bottom: calc(80px + var(--safe-bottom)); 
+            box-sizing: border-box;
         }
 
         .anime-card {
@@ -62,10 +81,9 @@
             cursor: pointer;
         }
         
-        /* Ефект натискання (Мобільний) */
         .anime-card:active { transform: scale(0.97); border-color: var(--accent-color); }
 
-        /* 🔥 ЕФЕКТ ПРИ НАВЕДЕННІ (ПК) 🔥 */
+        /* ЕФЕКТ ПРИ НАВЕДЕННІ */
         @media (hover: hover) {
             .anime-card:hover {
                 border-color: var(--accent-color);
@@ -96,7 +114,6 @@
         }
         .episode-btn:active { background-color: var(--accent-color); border-color: var(--accent-color); transform: scale(0.95); }
         
-        /* Ховер для кнопок епізодів */
         @media (hover: hover) {
             .episode-btn:hover {
                 background-color: var(--accent-color);
@@ -117,7 +134,6 @@
         .menu-item:last-child { border-bottom: none; }
         .menu-item:active { background-color: rgba(191, 0, 255, 0.1); }
         
-        /* Ховер для меню */
         @media (hover: hover) {
             .menu-item:hover { background-color: rgba(191, 0, 255, 0.08); }
         }
@@ -207,7 +223,7 @@
         </div>
         
         <div style="padding: 30px; text-align: center; color: #444; font-size: 12px;">
-            Anime App Mobile v1.2
+            Anime App Mobile v1.3
         </div>
     </div>
 
