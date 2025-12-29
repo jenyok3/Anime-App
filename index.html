@@ -12,10 +12,10 @@
             --card-bg: #121212;
             --hint-color: #b0b0b0;
             --accent-color: #bf00ff;
-            /* Напівпрозорий фон для оверлею */
-            --overlay-bg: rgba(0, 0, 0, 0.75); 
-            /* Фон кнопок: дуже прозорий білий, без рамок */
-            --btn-glass: rgba(255, 255, 255, 0.12);
+            /* Фон оверлею - глибокий темний */
+            --overlay-bg: rgba(0, 0, 0, 0.85); 
+            /* Фон кнопок - м'який сірий, який не виділяється */
+            --btn-soft: rgba(255, 255, 255, 0.15);
             --safe-top: env(safe-area-inset-top, 0px);
             --safe-bottom: env(safe-area-inset-bottom, 20px);
         }
@@ -37,7 +37,6 @@
             background-color: rgba(5, 5, 5, 0.95);
             backdrop-filter: blur(20px);
             padding: calc(10px + var(--safe-top)) 15px 10px;
-            /* Нижня межа пошуку теж може бути зайвою, але залишу тонкою */
             border-bottom: 1px solid #1a1a1a;
         }
 
@@ -56,17 +55,14 @@
             padding-bottom: calc(80px + var(--safe-bottom)); 
         }
 
-        /* --- КАРТКА (БЕЗ РАМКИ) --- */
+        /* --- КАРТКА --- */
         .anime-card {
-            background-color: var(--card-bg); 
-            border-radius: 12px; 
-            position: relative; 
-            overflow: hidden; 
-            /* Тінь залишаємо для об'єму, але рамку (border) прибираємо */
-            box-shadow: 0 4px 12px rgba(0,0,0,0.5); 
-            border: none; /* ПРИБРАНО РАМКУ */
-            cursor: pointer;
-            aspect-ratio: 2 / 3; 
+            background-color: var(--card-bg); border-radius: 12px; 
+            position: relative; overflow: hidden; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5); 
+            /* Без рамок */
+            border: none; 
+            cursor: pointer; aspect-ratio: 2 / 3; 
             transform: translateZ(0);
             transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
@@ -76,9 +72,10 @@
             object-fit: cover; transition: transform 0.4s ease;
         }
 
+        /* Градієнт за замовчуванням */
         .default-gradient {
             position: absolute; bottom: 0; left: 0; width: 100%; height: 70%;
-            background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 100%);
+            background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, transparent 100%);
             z-index: 1; transition: opacity 0.2s;
         }
         
@@ -93,65 +90,64 @@
             display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
         }
 
-        /* --- ОВЕРЛЕЙ --- */
+        /* --- ОВЕРЛЕЙ (BALANCED) --- */
         .overlay-info {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: var(--overlay-bg);
-            backdrop-filter: blur(8px);
+            /* Немає блюру на самому оверлеї, щоб кнопки були чіткішими, а фон просто темним */
             z-index: 5;
             display: flex; flex-direction: column; justify-content: space-between;
-            padding: 12px;
+            padding: 14px;
             opacity: 0; transition: opacity 0.2s ease;
         }
 
         .badge-container { display: flex; justify-content: center; margin-top: 5px; }
         .episode-badge {
             background: rgba(255, 255, 255, 0.1);
-            padding: 4px 10px; border-radius: 6px;
-            font-size: 10px; font-weight: 600; color: #ddd;
-            letter-spacing: 0.5px;
+            padding: 4px 12px; border-radius: 100px;
+            font-size: 11px; font-weight: 600; color: #eee;
         }
 
-        .info-center { text-align: center; display: flex; flex-direction: column; gap: 4px; margin-bottom: 10px; }
+        .info-center { text-align: center; display: flex; flex-direction: column; gap: 6px; margin-bottom: 10px; }
         .info-title { 
-            font-size: 14px; font-weight: 800; color: white; line-height: 1.3; 
+            font-size: 15px; font-weight: 800; color: white; line-height: 1.25; 
         }
-        .info-meta { font-size: 10px; color: #aaa; font-weight: 500; }
+        .info-meta { font-size: 11px; color: #aaa; font-weight: 500; }
 
-        /* --- КНОПКИ --- */
+        /* --- КНОПКИ (SOFT & BALANCED) --- */
         .buttons-row {
-            display: flex; gap: 8px; width: 100%;
+            display: flex; gap: 10px; width: 100%;
             align-items: center; justify-content: center;
         }
 
-        .btn-clean {
-            background-color: var(--btn-glass); 
-            border: none; 
-            border-radius: 8px; 
-            color: #fff; height: 38px;
+        .btn-soft {
+            background-color: var(--btn-soft);
+            border: none;
+            border-radius: 12px; /* М'які кути */
+            color: #fff; height: 44px; /* Оптимальна висота для пальця */
             display: flex; align-items: center; justify-content: center;
             cursor: pointer; transition: 0.2s;
         }
         
-        .btn-clean:active { background-color: rgba(255, 255, 255, 0.25); transform: scale(0.97); }
+        .btn-soft:active { background-color: rgba(255, 255, 255, 0.3); transform: scale(0.97); }
         @media(hover: hover) {
-            .btn-clean:hover { background-color: rgba(255, 255, 255, 0.2); }
+            .btn-soft:hover { background-color: rgba(255, 255, 255, 0.25); }
         }
 
         .btn-play {
-            flex-grow: 1; 
-            font-size: 13px; font-weight: 600; gap: 6px;
+            flex-grow: 1; /* Широка */
+            font-size: 14px; font-weight: 700; gap: 8px;
         }
-        .btn-play svg { fill: white; width: 12px; height: 12px; }
+        .btn-play svg { fill: white; width: 14px; height: 14px; }
 
         .btn-list {
-            width: 38px; flex-shrink: 0;
+            width: 44px; flex-shrink: 0; /* Квадратна */
         }
-        .btn-list svg { fill: white; width: 16px; height: 16px; }
+        .btn-list svg { fill: white; width: 22px; height: 22px; } /* Велика іконка */
         
+        /* Активна кнопка в черзі - стає трохи світлішою, без кольорових рамок */
         .btn-list.in-queue { 
-            background: rgba(191,0,255,0.2); 
-            color: var(--accent-color);
+            background: rgba(255, 255, 255, 0.3); 
         }
         .btn-list.in-queue svg { fill: var(--accent-color); }
 
@@ -160,9 +156,8 @@
         @media (hover: hover) {
             .anime-card:hover {
                 transform: scale(1.05);
-                box-shadow: 0 12px 30px rgba(0,0,0,0.8); /* Більша тінь при наведенні */
+                box-shadow: 0 15px 40px rgba(0,0,0,0.8);
                 z-index: 10;
-                /* Рамки при наведенні теж немає, щоб зберегти стиль */
             }
             .anime-card:hover .overlay-info { opacity: 1; }
             .anime-card:hover .default-title-bar { opacity: 0; }
@@ -310,9 +305,16 @@
                 const card = document.createElement('div');
                 card.className = 'anime-card';
                 
-                // SVG ICONS
+                // SVG ICONS (Товстіші і чіткіші)
                 const playIcon = `<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>`;
-                const addIcon = `<svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>`;
+                // Іконка "Список + Плюс" (як на скріншоті)
+                const addIcon = `<svg viewBox="0 0 24 24"><path d="M4 10h12v2H4zm0-4h12v2H4zm0 8h8v2H4zm10 0v6h6v-6h-6zM18 18h-2v-2h2v2zm0-4h-2v-2h2v2z" fill-rule="evenodd" clip-rule="evenodd"/><path d="M19 13h-2v3h-3v2h3v3h2v-3h3v-2h-3z"/></svg>`; 
+                // Спрощена іконка списку з плюсом, бо попередня була складна
+                const listPlusIcon = `<svg viewBox="0 0 24 24"><path d="M3 13h2v-2H3v2zm0-5h2V6H3v2zm0-5h2V1H3v2zm4 10h15v-2H7v2zm0-5h15V6H7v2zM7 1h15v2H7V1z"/><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>`;
+                
+                // Правильна іконка з вашого скріншоту (Список + Плюс збоку)
+                const combinedIcon = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 6h18v2H3V6zm0 5h12v2H3v-2zm0 5h12v2H3v-2z"/><path d="M19 13h2v2h2v2h-2v2h-2v-2h-2v-2h2v-2z"/></svg>`;
+                
                 const checkIcon = `<svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>`;
 
                 card.innerHTML = `
@@ -334,11 +336,11 @@
                         </div>
 
                         <div class="buttons-row">
-                            <button class="btn-clean btn-play" onclick="event.stopPropagation(); showDetailsById(${item.id})">
+                            <button class="btn-soft btn-play" onclick="event.stopPropagation(); showDetailsById(${item.id})">
                                 ${playIcon} Дивитися
                             </button>
-                            <button class="btn-clean btn-list ${inQueue ? 'in-queue' : ''}" onclick="event.stopPropagation(); toggleQueue(${item.id}, this)">
-                                ${inQueue ? checkIcon : addIcon}
+                            <button class="btn-soft btn-list ${inQueue ? 'in-queue' : ''}" onclick="event.stopPropagation(); toggleQueue(${item.id}, this)">
+                                ${inQueue ? checkIcon : combinedIcon}
                             </button>
                         </div>
                     </div>
@@ -357,7 +359,7 @@
         function toggleQueue(id, btn) {
             let queue = JSON.parse(localStorage.getItem('myQueue')) || [];
             const idx = queue.indexOf(id);
-            const addIcon = `<svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>`;
+            const combinedIcon = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 6h18v2H3V6zm0 5h12v2H3v-2zm0 5h12v2H3v-2z"/><path d="M19 13h2v2h2v2h-2v2h-2v-2h-2v-2h2v-2z"/></svg>`;
             const checkIcon = `<svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>`;
 
             if (idx === -1) {
@@ -366,7 +368,7 @@
                 if(tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
             } else {
                 queue.splice(idx, 1);
-                btn.innerHTML = addIcon; btn.classList.remove('in-queue');
+                btn.innerHTML = combinedIcon; btn.classList.remove('in-queue');
                 if(tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
             }
             localStorage.setItem('myQueue', JSON.stringify(queue));
