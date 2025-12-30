@@ -363,11 +363,11 @@
                         </div>
 
                         <div class="buttons-row">
-                            <button class="btn-clean btn-play" onclick="event.stopPropagation(); showDetailsById(${item.id})">
+                            <button class="btn-soft btn-play" onclick="event.stopPropagation(); showDetailsById(${item.id})">
                                 ${playIcon} Дивитися
                             </button>
-                            <button class="btn-clean btn-list ${inQueue ? 'in-queue' : ''}" onclick="event.stopPropagation(); toggleQueue(${item.id}, this)">
-                                ${inQueue ? checkIcon : addIcon}
+                            <button class="btn-soft btn-list ${inQueue ? 'in-queue' : ''}" onclick="event.stopPropagation(); toggleQueue(${item.id}, this)">
+                                ${inQueue ? checkIcon : combinedIcon}
                             </button>
                         </div>
                     </div>
