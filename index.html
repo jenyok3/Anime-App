@@ -12,10 +12,8 @@
             --card-bg: #121212;
             --hint-color: #b0b0b0;
             --accent-color: #bf00ff;
-            /* Фон оверлею - глибокий темний */
-            --overlay-bg: rgba(0, 0, 0, 0.85); 
-            /* Фон кнопок - м'який сірий, який не виділяється */
-            --btn-soft: rgba(255, 255, 255, 0.15);
+            --overlay-bg: rgba(0, 0, 0, 0.75); 
+            --btn-glass: rgba(255, 255, 255, 0.12);
             --safe-top: env(safe-area-inset-top, 0px);
             --safe-bottom: env(safe-area-inset-bottom, 20px);
         }
@@ -57,32 +55,37 @@
 
         /* --- КАРТКА --- */
         .anime-card {
-            background-color: var(--card-bg); border-radius: 12px; 
-            position: relative; overflow: hidden; 
+            background-color: var(--bg-color); 
+            border-radius: 12px; 
+            position: relative; 
+            overflow: hidden; 
             box-shadow: 0 4px 10px rgba(0,0,0,0.5); 
-            /* Без рамок */
             border: none; 
             cursor: pointer; aspect-ratio: 2 / 3; 
-            transform: translateZ(0);
+            transform: translateZ(0); 
+            -webkit-mask-image: -webkit-radial-gradient(white, black);
             transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
 
         .poster-image { 
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
-            object-fit: cover; transition: transform 0.4s ease;
+            position: absolute; top: 0; left: 0; 
+            width: 100.5%; height: 100.5%; 
+            object-fit: cover; display: block;
+            transform: scale(1.01); 
+            transition: transform 0.4s ease;
         }
 
-        /* Градієнт за замовчуванням */
         .default-gradient {
             position: absolute; bottom: 0; left: 0; width: 100%; height: 70%;
             background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, transparent 100%);
             z-index: 1; transition: opacity 0.2s;
+            pointer-events: none;
         }
         
         .default-title-bar {
             position: absolute; bottom: 15px; left: 0; width: 100%;
             text-align: center; padding: 0 10px; z-index: 2;
-            transition: opacity 0.2s;
+            transition: opacity 0.2s; pointer-events: none;
         }
         .default-title-text {
             font-size: 13px; font-weight: 700; color: white;
@@ -90,73 +93,81 @@
             display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
         }
 
-        /* --- ОВЕРЛЕЙ (BALANCED) --- */
+        /* --- ОВЕРЛЕЙ --- */
         .overlay-info {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            position: absolute; top: 0; left: 0; width: 100.5%; height: 100.5%;
             background: var(--overlay-bg);
-            /* Немає блюру на самому оверлеї, щоб кнопки були чіткішими, а фон просто темним */
+            backdrop-filter: blur(8px);
             z-index: 5;
             display: flex; flex-direction: column; justify-content: space-between;
-            padding: 14px;
+            padding: 12px;
             opacity: 0; transition: opacity 0.2s ease;
+            pointer-events: none; /* Щоб кліки проходили, поки не активно */
+        }
+        
+        /* Коли активно (клас або ховер), вмикаємо кліки */
+        .anime-card.is-active .overlay-info,
+        .anime-card:hover .overlay-info {
+            pointer-events: auto;
         }
 
         .badge-container { display: flex; justify-content: center; margin-top: 5px; }
         .episode-badge {
             background: rgba(255, 255, 255, 0.1);
-            padding: 4px 12px; border-radius: 100px;
-            font-size: 11px; font-weight: 600; color: #eee;
+            padding: 4px 10px; border-radius: 6px;
+            font-size: 10px; font-weight: 600; color: #ddd;
+            letter-spacing: 0.5px;
         }
 
-        .info-center { text-align: center; display: flex; flex-direction: column; gap: 6px; margin-bottom: 10px; }
+        .info-center { text-align: center; display: flex; flex-direction: column; gap: 4px; margin-bottom: 10px; }
         .info-title { 
-            font-size: 15px; font-weight: 800; color: white; line-height: 1.25; 
+            font-size: 14px; font-weight: 800; color: white; line-height: 1.3; 
         }
-        .info-meta { font-size: 11px; color: #aaa; font-weight: 500; }
+        .info-meta { font-size: 10px; color: #aaa; font-weight: 500; }
 
-        /* --- КНОПКИ (SOFT & BALANCED) --- */
+        /* --- КНОПКИ --- */
         .buttons-row {
-            display: flex; gap: 10px; width: 100%;
+            display: flex; gap: 8px; width: 100%;
             align-items: center; justify-content: center;
         }
 
-        .btn-soft {
-            background-color: var(--btn-soft);
-            border: none;
-            border-radius: 12px; /* М'які кути */
-            color: #fff; height: 44px; /* Оптимальна висота для пальця */
+        .btn-clean {
+            background-color: var(--btn-glass); 
+            border: none; 
+            border-radius: 8px; 
+            color: #fff; height: 38px;
             display: flex; align-items: center; justify-content: center;
             cursor: pointer; transition: 0.2s;
         }
         
-        .btn-soft:active { background-color: rgba(255, 255, 255, 0.3); transform: scale(0.97); }
+        .btn-clean:active { background-color: rgba(255, 255, 255, 0.25); transform: scale(0.97); }
         @media(hover: hover) {
-            .btn-soft:hover { background-color: rgba(255, 255, 255, 0.25); }
+            .btn-clean:hover { background-color: rgba(255, 255, 255, 0.2); }
         }
 
         .btn-play {
-            flex-grow: 1; /* Широка */
-            font-size: 14px; font-weight: 700; gap: 8px;
+            flex-grow: 1; 
+            font-size: 13px; font-weight: 600; gap: 6px;
         }
-        .btn-play svg { fill: white; width: 14px; height: 14px; }
+        .btn-play svg { fill: white; width: 12px; height: 12px; }
 
         .btn-list {
-            width: 44px; flex-shrink: 0; /* Квадратна */
+            width: 38px; flex-shrink: 0;
         }
-        .btn-list svg { fill: white; width: 22px; height: 22px; } /* Велика іконка */
+        .btn-list svg { fill: white; width: 16px; height: 16px; }
         
-        /* Активна кнопка в черзі - стає трохи світлішою, без кольорових рамок */
         .btn-list.in-queue { 
-            background: rgba(255, 255, 255, 0.3); 
+            background: rgba(191,0,255,0.2); 
+            color: var(--accent-color);
         }
         .btn-list.in-queue svg { fill: var(--accent-color); }
 
 
-        /* --- ЕФЕКТИ --- */
+        /* --- ЕФЕКТИ ДЛЯ ПК (HOVER) --- */
         @media (hover: hover) {
             .anime-card:hover {
                 transform: scale(1.05);
-                box-shadow: 0 15px 40px rgba(0,0,0,0.8);
+                box-shadow: 0 12px 30px rgba(0,0,0,0.8);
                 z-index: 10;
             }
             .anime-card:hover .overlay-info { opacity: 1; }
@@ -165,9 +176,16 @@
             .anime-card:hover .poster-image { transform: scale(1.1); }
         }
 
-        .anime-card:active { transform: scale(0.98); }
-        .anime-card:active .overlay-info { opacity: 1; transition: opacity 0.1s; }
-        .anime-card:active .default-title-bar { opacity: 0; }
+        /* --- ЕФЕКТИ ДЛЯ ТЕЛЕФОНУ (ACTIVE JS CLASS) --- */
+        .anime-card.is-active {
+            transform: scale(1.05);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.8);
+            z-index: 10;
+        }
+        .anime-card.is-active .overlay-info { opacity: 1; }
+        .anime-card.is-active .default-title-bar { opacity: 0; }
+        .anime-card.is-active .default-gradient { opacity: 0; }
+        .anime-card.is-active .poster-image { transform: scale(1.1); }
 
 
         /* --- ІНШЕ --- */
@@ -252,6 +270,7 @@
 
         let allAnimeData = []; 
         let currentAnimeId = null;
+        let activeCardTimeout = null; 
 
         function switchTab(tab) {
             document.getElementById('home-view').style.display = 'none';
@@ -288,15 +307,26 @@
 
         async function loadAnime() {
             try {
-                // Додаємо timestamp, щоб уникнути кешування
-                const response = await fetch('anime_data.json?t=' + new Date().getTime());
-                const data = await response.json();
-                allAnimeData = data.reverse();
+                const response = await fetch('anime_data.json?t=' + Date.now());
+                allAnimeData = (await response.json()).reverse();
                 renderGrid(allAnimeData);
-            } catch (error) {
-                console.error("Помилка завантаження даних:", error);
-                // Можна додати виведення помилки на екран, якщо потрібно
-            }
+            } catch (error) { console.error(error); }
+        }
+
+        // --- ЛОГІКА ДЛЯ ТЕЛЕФОНУ (ACTIVE CARD) ---
+        function activateCardMobile(cardElement) {
+            // Скидаємо активність з інших
+            document.querySelectorAll('.anime-card').forEach(c => c.classList.remove('is-active'));
+            if (activeCardTimeout) clearTimeout(activeCardTimeout);
+
+            // Активуємо цю
+            cardElement.classList.add('is-active');
+            if(tg.HapticFeedback) tg.HapticFeedback.selectionChanged();
+
+            // Таймер 10 сек
+            activeCardTimeout = setTimeout(() => {
+                cardElement.classList.remove('is-active');
+            }, 10000);
         }
 
         function renderGrid(items) {
@@ -310,7 +340,6 @@
                 const card = document.createElement('div');
                 card.className = 'anime-card';
                 
-                // SVG ICONS
                 const playIcon = `<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>`;
                 const addIcon = `<svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>`;
                 const checkIcon = `<svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>`;
@@ -334,17 +363,35 @@
                         </div>
 
                         <div class="buttons-row">
-                            <button class="btn-soft btn-play" onclick="event.stopPropagation(); showDetailsById(${item.id})">
+                            <button class="btn-clean btn-play" onclick="event.stopPropagation(); showDetailsById(${item.id})">
                                 ${playIcon} Дивитися
                             </button>
-                            <button class="btn-soft btn-list ${inQueue ? 'in-queue' : ''}" onclick="event.stopPropagation(); toggleQueue(${item.id}, this)">
+                            <button class="btn-clean btn-list ${inQueue ? 'in-queue' : ''}" onclick="event.stopPropagation(); toggleQueue(${item.id}, this)">
                                 ${inQueue ? checkIcon : addIcon}
                             </button>
                         </div>
                     </div>
                 `;
                 
-                card.onclick = () => { setTimeout(() => showDetails(item), 200); };
+                // ВАЖЛИВА ЛОГІКА ВЗАЄМОДІЇ
+                
+                // 1. Клік на ПК
+                card.addEventListener('click', (e) => {
+                    // Якщо ми на ПК (де є hover), клік відкриває сторінку
+                    // Ігноруємо якщо клік по кнопці (stopPropagation вже стоїть на кнопках)
+                    if (window.matchMedia('(hover: hover)').matches) {
+                        showDetails(item);
+                    }
+                });
+
+                // 2. Дотик на Телефоні
+                card.addEventListener('touchstart', (e) => {
+                    // Якщо клік не по кнопці
+                    if (!e.target.closest('button')) {
+                        activateCardMobile(card);
+                    }
+                });
+
                 container.appendChild(card);
             });
         }
